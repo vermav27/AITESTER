@@ -1,5 +1,5 @@
 # Secrets — never commit real credentials
-# .env
+.env
 
 # Python
 __pycache__/

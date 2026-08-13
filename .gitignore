@@ -1,2 +1,11 @@
 # Command Code local session state
 .commandcode/
+
+# OrangePlaywrightFramework — dependencies & run artifacts
+chapter_02_Prompt_Engineering/OrangePlaywrightFramework/node_modules/
+chapter_02_Prompt_Engineering/OrangePlaywrightFramework/ScreenshotAttachment/
+chapter_02_Prompt_Engineering/OrangePlaywrightFramework/Logs/
+chapter_02_Prompt_Engineering/OrangePlaywrightFramework/Reports/
+chapter_02_Prompt_Engineering/OrangePlaywrightFramework/test-results/
+chapter_02_Prompt_Engineering/OrangePlaywrightFramework/playwright-report/
+chapter_02_Prompt_Engineering/OrangePlaywrightFramework/.env

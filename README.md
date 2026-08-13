@@ -15,9 +15,9 @@ AITester/
 ├── chapter_01_LLM_Basics/                 # Chapter 1 — LLM fundamentals & constraints
 │   └── Rules_AntiHallucination.md         # Anti-hallucination rules for QA assistant prompts
 ├── chapter_02_Prompt_Engineering/         # Chapter 2 — prompt engineering & templates
-│   ├── 00_Task1.md                        # Placeholder (empty) — task/notes file
-│   ├── 01_RICE_POT_Template.md            # Placeholder (empty) — RICE-POT template
-│   ├── 02_RICE_POT_example.md             # Placeholder (empty) — RICE-POT example
+│   ├── 01_RICE_POT_Template.md            # RICE-POT prompt framework template (Role/Instruction/Context/Example/Parameters/Output/Tone)
+│   ├── 02_RICE_POT_example.md             # RICE-POT worked example — OrangeHRM Playwright framework build
+│   ├── OrangePlaywrightFramework/         # Enterprise JS/Playwright OrangeHRM automation framework (POM, XPath only)
 │   └── Prompt_Template/                   # Copy-paste prompt templates (by category)
 │       ├── BasicTestCasePrompts/          # Functional test case templates
 │       ├── APITestingPrompts/             # API test templates
@@ -42,9 +42,9 @@ Prompt engineering workflows and the template library.
 
 | File / Folder | Description |
 |---|---|
-| `00_Task1.md` | Placeholder file (currently empty). |
-| `01_RICE_POT_Template.md` | Placeholder file (currently empty). |
-| `02_RICE_POT_example.md` | Placeholder file (currently empty). |
+| `01_RICE_POT_Template.md` | The RICE-POT prompt framework — a structured template with 7 sections: **R**ole, **I**nstructions, **C**ontext, **E**xample, **P**arameters, **O**utput, **T**one — plus a Final Validation checklist to keep LLM outputs grounded and complete. |
+| `02_RICE_POT_example.md` | Worked example of the RICE-POT framework: a filled-in prompt that builds an enterprise JavaScript/Playwright automation framework for OrangeHRM (the resulting code lives in `OrangePlaywrightFramework/`). |
+| `OrangePlaywrightFramework/` | Enterprise-level JavaScript/Playwright automation framework for OrangeHRM (Page Object Model, XPath-only locators, timestamped screenshot/log/report artifacts, 99% pass-rate gate). Its own README explains architecture, setup, and commands. |
 | `Prompt_Template/` | All reusable prompt templates, organized into 3 categories (see below). |
 
 ---

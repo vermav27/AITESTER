@@ -1,0 +1,24 @@
+{
+  "name": "orangepwplaywrightframework",
+  "version": "1.0.0",
+  "description": "Enterprise-level JavaScript/Playwright automation framework for OrangeHRM (Page Object Model, XPath-only locators)",
+  "main": "playwright.config.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:single": "npx playwright test Tests",
+    "test:report": "npx playwright show-report"
+  },
+  "keywords": [
+    "playwright",
+    "orangehrm",
+    "automation",
+    "testing",
+    "pom"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
+  }
+}

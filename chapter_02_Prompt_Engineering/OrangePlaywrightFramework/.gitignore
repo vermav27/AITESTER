@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Secrets — never commit real credentials
+.env
+
+# Run artifacts (RICE-POT I-5/I-6/I-7) — regenerated on every run
+ScreenshotAttachment/
+Logs/
+Reports/
+
+# Playwright internals
+test-results/
+playwright-report/

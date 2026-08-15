@@ -23,7 +23,7 @@ def _base_url(config: Dict[str, str]) -> str:
 
 
 def _model(config: Dict[str, str]) -> str:
-    model = config.get("OLLAMA_MODEL", "gemma3:1b").strip()
+    model = config.get("OLLAMA_MODEL", "gemma3:4b").strip()
     if not model:
         raise OllamaServiceError("Ollama model name is not configured.")
     return model

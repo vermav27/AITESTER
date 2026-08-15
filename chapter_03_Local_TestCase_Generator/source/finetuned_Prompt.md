@@ -247,7 +247,7 @@ Use the locally available:
 Gemma 3 — 1 Billion Parameter Model
 ```
 
-Use the locally installed Ollama model corresponding to Gemma 3 1B.
+Use the locally installed Ollama model corresponding to Gemma 3 4B.
 
 Do NOT attempt to download or reinstall the model if it already exists.
 
@@ -361,7 +361,7 @@ CONSTRAINTS:
 - Follow the supplied template exactly.
 ```
 
-The final prompt should be optimized so that a smaller local model such as **Gemma 3 1B** can understand it reliably.
+The final prompt should be optimized so that the local **Gemma 3 4B** model can understand it reliably.
 
 Avoid unnecessary tokens and overly complicated instructions.
 
@@ -696,7 +696,7 @@ It should explain:
 * Virtual environment setup
 * Dependency installation
 * Ollama prerequisite
-* Gemma 3 1B configuration
+* Gemma 3 4B configuration
 * Jira configuration
 * Groq configuration
 * How to start the application
@@ -744,7 +744,7 @@ The code should:
 * Use Streamlit for the frontend.
 * Use Jira REST API.
 * Use Ollama as the primary local AI provider.
-* Use the locally installed Gemma 3 1B model.
+* Use the locally installed Gemma 3 4B model.
 * Support Groq.
 * Keep LLM providers modular.
 * Use the external test case template.
@@ -805,7 +805,7 @@ The preferred AI model is a **locally running Ollama model** because most proces
 The locally available model is:
 
 ```text
-Gemma 3 1B
+Gemma 3 4B
 ```
 
 Groq should be available as an alternative AI provider.
@@ -855,7 +855,7 @@ Build LLM Prompt
 ↓
 
 Send to:
-Ollama → Gemma 3 1B
+Ollama → Gemma 3 4B
 
 ↓
 
@@ -900,7 +900,7 @@ JIRA_API_TOKEN = User configured
 
 ```text
 OLLAMA_BASE_URL = Configurable
-OLLAMA_MODEL = Locally installed Gemma 3 1B model
+OLLAMA_MODEL = Locally installed Gemma 3 4B model
 ```
 
 ## Groq
@@ -957,7 +957,7 @@ Your final implementation should contain:
 7. Jira requirement parsing.
 8. Test case template loading.
 9. Ollama integration.
-10. Gemma 3 1B integration using the existing local Ollama installation.
+10. Gemma 3 4B integration using the existing local Ollama installation.
 11. Groq integration.
 12. AI provider selection.
 13. Optional Ollama → Groq fallback mechanism.
@@ -1032,7 +1032,7 @@ Before considering the task complete, internally verify all of the following.
 ## Ollama
 
 14. The application connects to the existing Ollama installation.
-15. The locally installed Gemma 3 1B model can be used.
+15. The locally installed Gemma 3 4B model can be used.
 16. Ollama connection failures are handled safely.
 
 ## Groq

@@ -25,7 +25,7 @@ DEFAULT_CONFIG: Dict[str, str] = {
     "JIRA_EMAIL": "",
     "JIRA_API_TOKEN": "",
     "OLLAMA_BASE_URL": "http://localhost:11434",
-    "OLLAMA_MODEL": "gemma3:1b",
+    "OLLAMA_MODEL": "gemma3:4b",
     "GROQ_API_KEY": "",
     "GROQ_MODEL": "llama-3.3-70b-versatile",
     "AI_PROVIDER": "ollama",

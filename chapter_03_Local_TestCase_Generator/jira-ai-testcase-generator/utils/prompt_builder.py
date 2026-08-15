@@ -1,6 +1,6 @@
 """Build the prompt sent to the AI model.
 
-The prompt is deliberately concise so a small local model (Gemma 3 1B) can
+The prompt is deliberately concise so the local Gemma 3 4B model can
 follow it reliably: role, grounded requirements, the template, and a short
 constraint list. Nothing here depends on which provider will serve the prompt.
 """

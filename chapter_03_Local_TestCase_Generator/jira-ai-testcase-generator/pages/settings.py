@@ -56,7 +56,7 @@ def main() -> None:
     ollama_base = st.text_input("Ollama Base URL", value=config.get("OLLAMA_BASE_URL", ""),
                                 placeholder="http://localhost:11434")
     ollama_model = st.text_input("Ollama Model Name", value=config.get("OLLAMA_MODEL", ""),
-                                 placeholder="gemma3:1b")
+                                 placeholder="gemma3:4b")
 
     st.subheader("Groq Configuration")
     groq_key = st.text_input(

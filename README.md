@@ -1,6 +1,6 @@
 # AITESTER
 
-AI Engineering resources for Software QA / SDET work. This repository combines LLM basics, prompt engineering templates, a Playwright automation framework example, and a local AI application that generates test cases from Jira tickets.
+AI Engineering resources for Software QA / SDET work. This repository combines LLM basics, prompt engineering templates, a Playwright automation framework example, a local AI application that generates test cases from Jira tickets, and Codex agent skills for drafting review-ready test plans.
 
 > This README is the top-level map of the repository. Individual projects, such as the Playwright framework and the Jira generator, also include their own README files with deeper setup and usage details.
 
@@ -13,6 +13,8 @@ AI Engineering resources for Software QA / SDET work. This repository combines L
 | `chapter_01_LLM_Basics/` | Grounding rules for safer QA-focused LLM output. |
 | `chapter_02_Prompt_Engineering/` | RICE-POT prompt framework, reusable prompt templates, and the OrangeHRM Playwright framework example. |
 | `chapter_03_Local_TestCase_Generator/` | Local Python + Streamlit Jira AI Test Case Generator using Ollama, with optional Groq support. |
+| `.agents/skills/testplan-create/` | Codex skill for fetching Jira tickets, analyzing requirement gaps, and drafting test plans. |
+| `.agents/output/` | Generated local artifacts such as Markdown/PDF test plans and reviewed design attachments. |
 | `PromptQuickReference.md` | Quick decision guide for selecting the right prompt template. |
 
 ---
@@ -23,6 +25,24 @@ AI Engineering resources for Software QA / SDET work. This repository combines L
 AITester/
 ├── README.md
 ├── PromptQuickReference.md
+├── .agents/
+│   ├── output/
+│   │   ├── KAN-1-Design.png
+│   │   ├── KAN-1-test-plan.md
+│   │   └── KAN-1-test-plan.pdf
+│   └── skills/
+│       └── testplan-create/
+│           ├── SKILL.md
+│           ├── .env          # local only; do not commit real secrets
+│           ├── assets/
+│           │   ├── logo.png
+│           │   └── vwo_details.md
+│           ├── references/
+│           │   ├── requirement-checklist.md
+│           │   └── template/
+│           │       └── Test_Plan_Template.md
+│           └── scripts/
+│               └── fetch_jira.sh
 ├── chapter_01_LLM_Basics/
 │   └── Rules_AntiHallucination.md
 ├── chapter_02_Prompt_Engineering/
@@ -178,6 +198,73 @@ For the full application README, architecture diagram, troubleshooting, and vali
 
 ---
 
+## Codex Agent Skill - Test Plan Creator
+
+The `.agents/skills/testplan-create/` skill turns a Jira ticket into a human-review-ready test plan. It is designed for QA/test planning work such as:
+
+```text
+Create a test plan for KAN-1
+```
+
+The skill flow is:
+
+1. Fetch the Jira ticket using `scripts/fetch_jira.sh` and local Jira environment variables.
+2. Capture summary, description, acceptance criteria, components, linked issues, attachments, and release/sprint context where available.
+3. Check the ticket against `references/requirement-checklist.md`.
+4. Draft the plan using `references/template/Test_Plan_Template.md`.
+5. Stop at a Human Review Gate so the test plan is treated as draft/in-review, not final.
+
+### Test Plan Skill Files
+
+| File / Folder | Purpose |
+|---|---|
+| `.agents/skills/testplan-create/SKILL.md` | Skill instructions and guardrails for Jira-based test-plan drafting. |
+| `.agents/skills/testplan-create/scripts/fetch_jira.sh` | Jira REST API helper for fetching issue details. |
+| `.agents/skills/testplan-create/references/requirement-checklist.md` | Requirement gap-analysis checklist used before drafting the plan. |
+| `.agents/skills/testplan-create/references/template/Test_Plan_Template.md` | Standard test-plan template. |
+| `.agents/skills/testplan-create/assets/vwo_details.md` | Structured VWO overview/reference notes. |
+| `.agents/skills/testplan-create/assets/logo.png` | Skill asset used for VWO-related context or presentation. |
+| `.agents/skills/testplan-create/.env` | Local Jira configuration file. Keep this private and out of commits. |
+
+### Generated Output
+
+Generated plans and supporting artifacts are stored in `.agents/output/`.
+
+Current generated example:
+
+| Artifact | Description |
+|---|---|
+| `.agents/output/KAN-1-test-plan.md` | Draft Markdown test plan for Jira story `KAN-1`. |
+| `.agents/output/KAN-1-test-plan.pdf` | PDF version of the same draft test plan. |
+| `.agents/output/KAN-1-Design.png` | Jira design attachment used as a visual reference for the test plan. |
+
+### Test Plan Skill Usage
+
+Before using the skill, configure Jira access locally:
+
+Create `.agents/skills/testplan-create/.env` locally with the required values.
+
+Required variables:
+
+| Variable | Description |
+|---|---|
+| `JIRA_BASE_URL` | Jira site URL, for example `https://your-domain.atlassian.net`. |
+| `JIRA_EMAIL` | Jira account email. |
+| `JIRA_TOKEN` | Jira API token. Do not use your Jira password. |
+
+To fetch a ticket manually:
+
+```bash
+set -a
+source .env
+set +a
+bash scripts/fetch_jira.sh KAN-1
+```
+
+The generated test plan should always include gaps/questions, assumptions, risks, scenario priorities, test data needs, entry/exit criteria, and a Human Review Gate.
+
+---
+
 ## How to Use a Prompt Template
 
 1. Open the matching `.txt` file under `chapter_02_Prompt_Engineering/Prompt_Template/<category>/`.
@@ -193,6 +280,8 @@ For the full application README, architecture diagram, troubleshooting, and vali
 - Do not hardcode Jira tokens, Groq keys, emails, or project credentials in source files or documentation.
 - Keep real credentials in a local `.env` file only.
 - Treat `.env.example` as a placeholder template; it should not contain real secrets.
+- Keep `.agents/skills/testplan-create/.env` private and do not commit it.
+- Review generated files in `.agents/output/` before sharing or committing them, because Jira tickets and attachments may contain private product details.
 - Rotate any token that has ever been committed, shared, pasted into an AI chat, or exposed in logs.
 - Generated artifacts and dependency folders should remain uncommitted.
 
@@ -205,3 +294,4 @@ For the full application README, architecture diagram, troubleshooting, and vali
 3. Try the prompt templates using `PromptQuickReference.md`.
 4. Explore the OrangeHRM Playwright framework as a full automation example.
 5. Run the Jira AI Test Case Generator from Chapter 3 and customize `templates/test_case_template.md` for your team.
+6. Use `.agents/skills/testplan-create/` to draft Jira-based test plans and review the generated artifacts in `.agents/output/`.

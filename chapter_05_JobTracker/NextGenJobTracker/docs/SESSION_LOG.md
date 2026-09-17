@@ -345,3 +345,49 @@
 
 ### Session status
 - Complete
+
+## 2026-09-17T18:09:32Z — Session 07
+
+### Goals
+- Create a polished, well-labeled architecture diagram for the job tracker.
+- Save the PNG inside a new `Architecture` project folder.
+
+### Requirements and decisions
+- Used the built-in image-generation workflow for a landscape infographic diagram.
+- Grounded every layer and label in the implemented React UI, services, repository contracts, IndexedDB stores and JSON backup flow.
+- Used `Architecture.png` as the canonical spelling and added an identical `Architechture.png` copy because both spellings appeared in the request.
+
+### Work completed
+- Generated a 16:9 architecture infographic with presentation, application-service, repository and browser-storage layers.
+- Included side flows for job-platform URL detection and JSON import/export.
+- Included the static frontend boundary and the absence of backend, account and cloud-sync services.
+
+### Files changed
+- Added: `Architecture/Architecture.png`
+- Added: `Architecture/Architechture.png`
+- Modified: `docs/SESSION_LOG.md`
+
+### Dependencies
+- Added: none
+- Removed: none
+
+### Database or schema changes
+- None
+
+### Verification
+- Both outputs are valid 1672x941 RGB PNG files.
+- Canonical and filename-compatible copies are byte-identical.
+- Inspected the generated original and a 1000px downscaled preview for composition, label legibility and correct flow.
+- Application tests were not rerun because this change adds documentation images only and does not alter runtime code.
+
+### Problems and resolutions
+- The workspace full-resolution preview returned a blank renderer frame; byte comparison matched the successfully inspected generated original, and a downscaled workspace preview rendered correctly.
+
+### Known limitations
+- The diagram is a raster documentation asset; individual labels are not editable as vector objects.
+
+### Next recommended task
+- Reference `Architecture/Architecture.png` from project documentation if an inline architecture section is desired.
+
+### Session status
+- Complete

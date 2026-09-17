@@ -391,3 +391,43 @@
 
 ### Session status
 - Complete
+
+## 2026-09-17T18:24:05Z — Session 08
+
+### Goals
+- Keep only one relevant PNG in the `Architecture` folder.
+
+### Requirements and decisions
+- Retained the correctly spelled canonical file `Architecture/Architecture.png`.
+- Removed the identical misspelled duplicate `Architecture/Architechture.png`.
+
+### Work completed
+- Reduced the architecture folder to one PNG asset.
+
+### Files changed
+- Removed: `Architecture/Architechture.png`
+- Modified: `docs/SESSION_LOG.md`
+
+### Dependencies
+- Added: none
+- Removed: none
+
+### Database or schema changes
+- None
+
+### Verification
+- Confirmed `Architecture/Architecture.png` is the only file in the folder.
+- Confirmed the retained file is a valid 1672x941 RGB PNG.
+- Application tests were not rerun because runtime code was unchanged.
+
+### Problems and resolutions
+- None.
+
+### Known limitations
+- The retained diagram is a raster documentation asset; individual labels are not editable as vector objects.
+
+### Next recommended task
+- No follow-up is required for this cleanup.
+
+### Session status
+- Complete

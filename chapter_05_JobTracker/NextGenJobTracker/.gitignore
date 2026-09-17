@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+.DS_Store
+.env
+.env.*
+!.env.example
+*.local
+*.log
+job-tracker-backup-*.json
+playwright-report/
+test-results/

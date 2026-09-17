@@ -37,11 +37,11 @@ export function JobCard({
     <article
       ref={setNodeRef}
       style={style}
-      className={`rounded-md border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-700 dark:bg-slate-900 ${
+      className={`min-w-0 rounded-lg border border-slate-200 bg-white p-2.5 shadow-sm transition-shadow hover:shadow-md 2xl:p-3 dark:border-slate-700 dark:bg-slate-900 ${
         isDragging ? 'opacity-70 ring-2 ring-emerald-500' : ''
       }`}
     >
-      <div className="flex items-start gap-2">
+      <div className="flex min-w-0 items-start gap-2">
         <button
           type="button"
           className="mt-0.5 inline-flex h-7 w-7 shrink-0 cursor-grab items-center justify-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 active:cursor-grabbing dark:hover:bg-slate-800 dark:hover:text-slate-100"
@@ -60,66 +60,68 @@ export function JobCard({
         </button>
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <h3 className="truncate font-semibold text-slate-950 dark:text-white">{job.companyName}</h3>
-              <p className="mt-0.5 line-clamp-2 text-sm text-slate-600 dark:text-slate-300">{job.role}</p>
-            </div>
-            <SourceBadge jobUrl={job.jobUrl} />
-          </div>
+          <h3 className="truncate text-sm font-semibold text-slate-950 dark:text-white" title={job.companyName}>
+            {job.companyName}
+          </h3>
+          <p className="mt-0.5 line-clamp-2 text-xs leading-5 text-slate-600 dark:text-slate-300" title={job.role}>
+            {job.role}
+          </p>
+        </div>
+        <SourceBadge jobUrl={job.jobUrl} />
+      </div>
 
-          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
-            {job.resumeName ? (
-              <span className="rounded-md bg-slate-100 px-2 py-1 dark:bg-slate-800">{job.resumeName}</span>
-            ) : null}
-            <span className="rounded-md bg-emerald-50 px-2 py-1 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-100">
-              {formatAppliedAge(job.appliedDate)}
-            </span>
-            {job.salaryRange ? (
-              <span className="max-w-full truncate rounded-md bg-amber-50 px-2 py-1 text-amber-900 dark:bg-amber-950 dark:text-amber-100">
-                {job.salaryRange}
-              </span>
-            ) : null}
-          </div>
+      <div className="mt-3 flex min-w-0 flex-wrap items-center gap-1.5 text-[11px] text-slate-600 dark:text-slate-300">
+        {job.resumeName ? (
+          <span className="max-w-full truncate rounded-md bg-slate-100 px-2 py-1 dark:bg-slate-800" title={job.resumeName}>
+            {job.resumeName}
+          </span>
+        ) : null}
+        <span className="max-w-full truncate rounded-md bg-emerald-50 px-2 py-1 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-100">
+          {formatAppliedAge(job.appliedDate)}
+        </span>
+        {job.salaryRange ? (
+          <span className="max-w-full truncate rounded-md bg-amber-50 px-2 py-1 text-amber-900 dark:bg-amber-950 dark:text-amber-100" title={job.salaryRange}>
+            {job.salaryRange}
+          </span>
+        ) : null}
+      </div>
 
-          <div className="mt-3 grid gap-2">
-            <label className="sr-only" htmlFor={`status-${job.id}`}>
-              Change status for {job.companyName} {job.role}
-            </label>
-            <select
-              id={`status-${job.id}`}
-              className="field-input h-9 py-1 text-sm"
-              value={job.status}
-              onChange={(event) => onStatusChange(job, event.target.value as JobStatus)}
-              aria-label={`Change status for ${job.companyName} ${job.role}. Current status ${getStatusLabel(job.status)}.`}
-            >
-              {JOB_STATUSES.map((status) => (
-                <option key={status.id} value={status.id}>
-                  {status.label}
-                </option>
-              ))}
-            </select>
-            <div className="flex justify-end gap-2">
-              <button
-                type="button"
-                className="icon-button"
-                onClick={() => onEdit(job)}
-                aria-label={`Edit ${job.companyName} ${job.role}`}
-                title="Edit"
-              >
-                <Pencil className="h-4 w-4" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                className="icon-button-danger"
-                onClick={() => onDelete(job)}
-                aria-label={`Delete ${job.companyName} ${job.role}`}
-                title="Delete"
-              >
-                <Trash2 className="h-4 w-4" aria-hidden="true" />
-              </button>
-            </div>
-          </div>
+      <div className="mt-3 grid gap-2">
+        <label className="sr-only" htmlFor={`status-${job.id}`}>
+          Change status for {job.companyName} {job.role}
+        </label>
+        <select
+          id={`status-${job.id}`}
+          className="field-input h-9 min-w-0 py-1 text-xs"
+          value={job.status}
+          onChange={(event) => onStatusChange(job, event.target.value as JobStatus)}
+          aria-label={`Change status for ${job.companyName} ${job.role}. Current status ${getStatusLabel(job.status)}.`}
+        >
+          {JOB_STATUSES.map((status) => (
+            <option key={status.id} value={status.id}>
+              {status.label}
+            </option>
+          ))}
+        </select>
+        <div className="flex justify-end gap-2">
+          <button
+            type="button"
+            className="icon-button h-9 w-9"
+            onClick={() => onEdit(job)}
+            aria-label={`Edit ${job.companyName} ${job.role}`}
+            title="Edit"
+          >
+            <Pencil className="h-4 w-4" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            className="icon-button-danger h-9 w-9"
+            onClick={() => onDelete(job)}
+            aria-label={`Delete ${job.companyName} ${job.role}`}
+            title="Delete"
+          >
+            <Trash2 className="h-4 w-4" aria-hidden="true" />
+          </button>
         </div>
       </div>
     </article>

@@ -1,10 +1,10 @@
 export const JOB_STATUSES = [
-  { id: 'wishlist', label: 'Wishlist', accent: 'border-l-slate-400' },
-  { id: 'applied', label: 'Applied', accent: 'border-l-sky-500' },
-  { id: 'follow-up', label: 'Follow-up', accent: 'border-l-amber-500' },
-  { id: 'interview', label: 'Interview', accent: 'border-l-violet-500' },
-  { id: 'offer', label: 'Offer', accent: 'border-l-emerald-500' },
-  { id: 'rejected', label: 'Rejected', accent: 'border-l-rose-500' },
+  { id: 'wishlist', label: 'Wishlist', accent: 'bg-slate-400' },
+  { id: 'applied', label: 'Applied', accent: 'bg-sky-500' },
+  { id: 'follow-up', label: 'Follow-up', accent: 'bg-amber-500' },
+  { id: 'interview', label: 'Interview', accent: 'bg-violet-500' },
+  { id: 'offer', label: 'Offer', accent: 'bg-emerald-500' },
+  { id: 'rejected', label: 'Rejected', accent: 'bg-rose-500' },
 ] as const;
 
 export type JobStatus = (typeof JOB_STATUSES)[number]['id'];

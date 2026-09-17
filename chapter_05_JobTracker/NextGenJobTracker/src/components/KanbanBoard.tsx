@@ -53,22 +53,25 @@ function ColumnShell({
   return (
     <section
       ref={setNodeRef}
-      className={`flex h-full min-h-[560px] w-[320px] shrink-0 flex-col rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-950 ${
+      className={`flex min-h-[420px] min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-slate-50/80 shadow-sm xl:h-[calc(100vh-16rem)] xl:min-h-[520px] xl:max-h-[720px] dark:border-slate-700 dark:bg-slate-950 ${
         isOver ? 'ring-2 ring-emerald-500' : ''
       }`}
       aria-labelledby={`${status.id}-heading`}
     >
-      <header className={`border-l-4 ${status.accent} border-b border-b-slate-200 px-3 py-3 dark:border-b-slate-700`}>
+      <header className="border-b border-slate-200 bg-white/80 px-3 py-3 dark:border-slate-700 dark:bg-slate-900/80">
         <div className="flex items-center justify-between gap-3">
-          <h2 id={`${status.id}-heading`} className="font-semibold text-slate-900 dark:text-slate-100">
-            {status.label}
-          </h2>
+          <div className="flex min-w-0 items-center gap-2">
+            <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${status.accent}`} aria-hidden="true" />
+            <h2 id={`${status.id}-heading`} className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">
+              {status.label}
+            </h2>
+          </div>
           <span className="rounded-md bg-white px-2 py-1 text-xs font-medium text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-200">
             {isSearchActive ? `${visibleCount} / ${totalCount}` : totalCount}
           </span>
         </div>
       </header>
-      <div className="flex-1 overflow-y-auto p-3">{children}</div>
+      <div className="min-h-0 flex-1 overflow-y-auto p-2.5 2xl:p-3">{children}</div>
     </section>
   );
 }
@@ -182,42 +185,43 @@ export function KanbanBoard({
 
   return (
     <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={(event) => void handleDragEnd(event)}>
-      <div className="overflow-x-auto pb-3">
-        <div className="flex min-h-[600px] gap-4">
-          {JOB_STATUSES.map((status) => {
-            const columnJobs = visibleByStatus.get(status.id) ?? [];
-            return (
-              <ColumnShell
-                key={status.id}
-                status={status}
-                totalCount={totalByStatus.get(status.id) ?? 0}
-                visibleCount={columnJobs.length}
-                isSearchActive={isSearchActive}
-              >
-                <SortableContext items={columnJobs.map((job) => job.id)} strategy={verticalListSortingStrategy}>
-                  <div className="space-y-3">
-                    {columnJobs.map((job) => (
-                      <JobCard
-                        key={job.id}
-                        job={job}
-                        sortMode={sortMode}
-                        isSearchActive={isSearchActive}
-                        onEdit={onEdit}
-                        onDelete={onDelete}
-                        onStatusChange={onStatusChange}
-                      />
-                    ))}
-                    {columnJobs.length === 0 ? (
-                      <p className="rounded-md border border-dashed border-slate-300 px-3 py-6 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
-                        {isSearchActive ? 'No matching jobs' : 'No jobs here'}
-                      </p>
-                    ) : null}
-                  </div>
-                </SortableContext>
-              </ColumnShell>
-            );
-          })}
-        </div>
+      <div
+        className="grid w-full min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6"
+        data-testid="kanban-board"
+      >
+        {JOB_STATUSES.map((status) => {
+          const columnJobs = visibleByStatus.get(status.id) ?? [];
+          return (
+            <ColumnShell
+              key={status.id}
+              status={status}
+              totalCount={totalByStatus.get(status.id) ?? 0}
+              visibleCount={columnJobs.length}
+              isSearchActive={isSearchActive}
+            >
+              <SortableContext items={columnJobs.map((job) => job.id)} strategy={verticalListSortingStrategy}>
+                <div className="space-y-2.5 2xl:space-y-3">
+                  {columnJobs.map((job) => (
+                    <JobCard
+                      key={job.id}
+                      job={job}
+                      sortMode={sortMode}
+                      isSearchActive={isSearchActive}
+                      onEdit={onEdit}
+                      onDelete={onDelete}
+                      onStatusChange={onStatusChange}
+                    />
+                  ))}
+                  {columnJobs.length === 0 ? (
+                    <p className="rounded-lg border border-dashed border-slate-300 px-3 py-6 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+                      {isSearchActive ? 'No matching jobs' : 'No jobs here'}
+                    </p>
+                  ) : null}
+                </div>
+              </SortableContext>
+            </ColumnShell>
+          );
+        })}
       </div>
     </DndContext>
   );

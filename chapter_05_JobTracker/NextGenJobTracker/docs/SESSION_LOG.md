@@ -195,3 +195,61 @@
 
 ### Session status
 - Complete
+
+## 2026-09-17T17:41:56Z — Session 04
+
+### Goals
+- Correct browser alignment across desktop, laptop and tablet widths.
+- Keep the Kanban board inside the browser viewport without left-right scrolling.
+- Give cards, columns and controls a smoother, more professional finish.
+
+### Requirements and decisions
+- The latest explicit request for no horizontal Kanban scrolling refines the original prompt preference for horizontal scrolling on narrower screens.
+- Replaced fixed `320px` columns with a responsive grid: six columns from `1280px`, three from `1024px`, two from `640px` and one below that.
+- Kept all six statuses visible in their required order and retained vertical column scrolling where the desktop board has many cards.
+- Preserved the existing local-first persistence, drag-and-drop behavior, status controls and accessibility labels.
+
+### Work completed
+- Removed the horizontal Kanban scroller and hard-coded column widths.
+- Added responsive equal-width columns with constrained, viewport-aware desktop height.
+- Reworked card structure so metadata, status and actions use the full available width.
+- Added safe truncation and native tooltips for long company, role, resume and salary text.
+- Replaced sharp status edge bars with compact rounded status markers.
+- Standardized cards, inputs and buttons on smooth `8px` corners with restrained hover transitions and shadows.
+
+### Files changed
+- Modified: `src/components/KanbanBoard.tsx`
+- Modified: `src/components/JobCard.tsx`
+- Modified: `src/constants/statuses.ts`
+- Modified: `src/index.css`
+- Modified: `docs/SESSION_LOG.md`
+
+### Dependencies
+- Added: none
+- Removed: none
+
+### Database or schema changes
+- None
+
+### Verification
+- `npm run lint` — passed.
+- `npm test` — passed, 6 files and 32 tests.
+- `npm run build` — passed.
+- Browser layout checks at 1440x900, 1280x900, 1024x900 and 768x900 — passed.
+- Document width matched viewport width at every checked size; no horizontal overflow or off-screen controls were detected.
+- Headed Chromium smoke test covered desktop column alignment, a persisted status change, edit-dialog open/close and tablet reflow — passed with 0 console errors.
+- Screenshots saved under ignored `test-results/ui-alignment/`.
+
+### Problems and resolutions
+- The previous six-column row measured `1766px` in a `1440px` viewport because every column was fixed at `320px`; responsive grid tracks reduced the desktop columns to equal widths within the available browser space.
+- Narrow six-column cards initially constrained all content beside the drag handle; separating the card header from its controls restored full-width selectors and aligned actions.
+
+### Known limitations
+- Long labels are visually truncated in the compact six-column layout at 1280px, with their complete values preserved in storage and exposed through native title tooltips.
+- Visual screenshot artifacts under `test-results/` are intentionally ignored and not committed.
+
+### Next recommended task
+- Recheck the compact desktop layout after adding a large real-world job set to confirm the chosen per-column vertical scrolling remains comfortable.
+
+### Session status
+- Complete

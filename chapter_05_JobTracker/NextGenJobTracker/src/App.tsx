@@ -1,4 +1,5 @@
 import {
+  ChevronDown,
   Download,
   HelpCircle,
   Plus,
@@ -368,7 +369,7 @@ export default function App() {
             </div>
           </div>
 
-          <div className="grid gap-3 md:grid-cols-[minmax(260px,1fr)_auto_auto]">
+          <div className="grid items-end gap-3 md:grid-cols-[minmax(260px,1fr)_auto_auto]">
             <label className="relative block">
               <span className="sr-only">Search company and role</span>
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" aria-hidden="true" />
@@ -393,20 +394,26 @@ export default function App() {
 
             <label className="field-label compact">
               Sort
-              <select className="field-input h-10" value={settings.sortMode} onChange={(event) => void handleSortChange(event.target.value as SortMode)}>
-                <option value="manual">Manual</option>
-                <option value="newest">Newest</option>
-                <option value="oldest">Oldest</option>
-              </select>
+              <div className="select-control">
+                <select className="field-input h-10" value={settings.sortMode} onChange={(event) => void handleSortChange(event.target.value as SortMode)}>
+                  <option value="manual">Manual</option>
+                  <option value="newest">Newest</option>
+                  <option value="oldest">Oldest</option>
+                </select>
+                <ChevronDown className="select-chevron" aria-hidden="true" />
+              </div>
             </label>
 
             <label className="field-label compact">
               Theme
-              <select className="field-input h-10" value={settings.theme} onChange={(event) => void handleThemeChange(event.target.value as ThemePreference)}>
-                <option value="system">System</option>
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-              </select>
+              <div className="select-control">
+                <select className="field-input h-10" value={settings.theme} onChange={(event) => void handleThemeChange(event.target.value as ThemePreference)}>
+                  <option value="system">System</option>
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                </select>
+                <ChevronDown className="select-chevron" aria-hidden="true" />
+              </div>
             </label>
           </div>
         </div>

@@ -57,6 +57,18 @@ body {
     @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950 shadow-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-50 dark:placeholder:text-slate-500;
   }
 
+  .select-control {
+    @apply relative;
+  }
+
+  .select-control > select {
+    @apply appearance-none pr-9;
+  }
+
+  .select-chevron {
+    @apply pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 dark:text-slate-400;
+  }
+
   .field-error {
     @apply text-xs font-medium text-rose-700 dark:text-rose-300;
   }

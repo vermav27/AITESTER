@@ -253,3 +253,54 @@
 
 ### Session status
 - Complete
+
+## 2026-09-17T17:50:26Z — Session 05
+
+### Goals
+- Correct the control alignment identified in the supplied browser screenshot.
+- Center the search icon and select chevrons consistently.
+
+### Requirements and decisions
+- Bottom-aligned the search control with the labeled Sort and Theme fields.
+- Replaced browser-native select indicators with non-interactive Lucide chevrons for consistent placement across operating systems.
+- Applied the same select treatment to header settings, job cards and the job form.
+
+### Work completed
+- Aligned the search, Sort and Theme field edges on a shared baseline.
+- Added reusable select-wrapper and chevron styles.
+- Preserved all existing labels, keyboard behavior and native select interaction.
+
+### Files changed
+- Modified: `src/App.tsx`
+- Modified: `src/components/JobCard.tsx`
+- Modified: `src/components/JobForm.tsx`
+- Modified: `src/index.css`
+- Modified: `docs/SESSION_LOG.md`
+
+### Dependencies
+- Added: none
+- Removed: none
+
+### Database or schema changes
+- None
+
+### Verification
+- `npm run lint` — passed.
+- `npm test` — passed, 6 files and 32 tests.
+- `npm run build` — passed.
+- Chromium geometry checks at 1440x900 and 768x900 confirmed identical field baselines, exactly centered icons and no horizontal overflow.
+- Headed Chromium smoke test covered header alignment, status selection, job-form rendering and tablet reflow — passed with 0 console errors.
+- Screenshots saved under ignored `test-results/alignment-fix/`.
+
+### Problems and resolutions
+- The search item stretched to the height of the labeled setting controls, causing its absolutely positioned icon to center against the grid row instead of the input; bottom-aligning grid items made the input the positioning reference.
+- Native select indicators varied by browser; explicit centered chevrons now provide stable alignment.
+
+### Known limitations
+- Visual screenshot artifacts under `test-results/` are intentionally ignored and not committed.
+
+### Next recommended task
+- No follow-up is required for this alignment correction.
+
+### Session status
+- Complete

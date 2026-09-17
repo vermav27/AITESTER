@@ -1,4 +1,4 @@
-import { Save } from 'lucide-react';
+import { ChevronDown, Save } from 'lucide-react';
 import type { FormEvent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { JOB_STATUSES } from '../constants/statuses';
@@ -118,17 +118,20 @@ export function JobForm({ job, jobs, resumeNames, onSave, onClose }: JobFormProp
 
             <label className="field-label">
               Status
-              <select
-                className="field-input"
-                value={draft.status}
-                onChange={(event) => updateField('status', event.target.value as JobDraft['status'])}
-              >
-                {JOB_STATUSES.map((status) => (
-                  <option key={status.id} value={status.id}>
-                    {status.label}
-                  </option>
-                ))}
-              </select>
+              <div className="select-control">
+                <select
+                  className="field-input"
+                  value={draft.status}
+                  onChange={(event) => updateField('status', event.target.value as JobDraft['status'])}
+                >
+                  {JOB_STATUSES.map((status) => (
+                    <option key={status.id} value={status.id}>
+                      {status.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="select-chevron" aria-hidden="true" />
+              </div>
             </label>
 
             <label className="field-label">

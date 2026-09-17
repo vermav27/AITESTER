@@ -1,6 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, Pencil, Trash2 } from 'lucide-react';
+import { ChevronDown, GripVertical, Pencil, Trash2 } from 'lucide-react';
 import { JOB_STATUSES, getStatusLabel, type JobStatus } from '../constants/statuses';
 import { formatAppliedAge } from '../utils/dates';
 import type { Job, SortMode } from '../types/job';
@@ -87,22 +87,25 @@ export function JobCard({
       </div>
 
       <div className="mt-3 grid gap-2">
-        <label className="sr-only" htmlFor={`status-${job.id}`}>
-          Change status for {job.companyName} {job.role}
-        </label>
-        <select
-          id={`status-${job.id}`}
-          className="field-input h-9 min-w-0 py-1 text-xs"
-          value={job.status}
-          onChange={(event) => onStatusChange(job, event.target.value as JobStatus)}
-          aria-label={`Change status for ${job.companyName} ${job.role}. Current status ${getStatusLabel(job.status)}.`}
-        >
-          {JOB_STATUSES.map((status) => (
-            <option key={status.id} value={status.id}>
-              {status.label}
-            </option>
-          ))}
-        </select>
+        <div className="select-control min-w-0">
+          <label className="sr-only" htmlFor={`status-${job.id}`}>
+            Change status for {job.companyName} {job.role}
+          </label>
+          <select
+            id={`status-${job.id}`}
+            className="field-input h-9 min-w-0 py-1 text-xs"
+            value={job.status}
+            onChange={(event) => onStatusChange(job, event.target.value as JobStatus)}
+            aria-label={`Change status for ${job.companyName} ${job.role}. Current status ${getStatusLabel(job.status)}.`}
+          >
+            {JOB_STATUSES.map((status) => (
+              <option key={status.id} value={status.id}>
+                {status.label}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="select-chevron" aria-hidden="true" />
+        </div>
         <div className="flex justify-end gap-2">
           <button
             type="button"

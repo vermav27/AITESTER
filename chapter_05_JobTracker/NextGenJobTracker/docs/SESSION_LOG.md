@@ -104,3 +104,47 @@
 
 ### Session status
 - Complete
+
+## 2026-09-17T13:56:33Z — Session 02
+
+### Goals
+- Run the tracker tests and a headed browser workflow so the application behavior can be observed visually.
+
+### Requirements and decisions
+- Existing automated tests are Vitest/jsdom tests and do not open a visible browser.
+- Used Playwright with headed Chromium against the production preview for visual workflow coverage.
+- Added an embedded SVG favicon in `index.html` after the headed console check reported a missing-resource 404.
+
+### Work completed
+- Ran the full Vitest suite.
+- Rebuilt the production app.
+- Ran a headed Playwright workflow covering validation, add, duplicate warning, drag status move, status menu, search, sorting, edit, help guide, theme switching, export, merge import, replace import, reload persistence and delete.
+
+### Files changed
+- Modified: `index.html`
+- Modified: `docs/SESSION_LOG.md`
+
+### Dependencies
+- Added: none
+- Removed: none
+
+### Database or schema changes
+- None
+
+### Verification
+- `npm test` — passed, 6 files and 32 tests.
+- `npm run build` — passed.
+- Headed Playwright visual workflow — passed with 0 console errors.
+
+### Problems and resolutions
+- Initial headed harness used exact label matching after inline validation changed field accessible names; adjusted the harness to use prefix-based dialog-scoped labels.
+- Browser console initially reported a 404 for a missing favicon; resolved by embedding a data-URI SVG favicon.
+
+### Known limitations
+- The headed workflow was run from an inline Playwright script, not as a committed Playwright spec.
+
+### Next recommended task
+- Consider adding the headed workflow as a reusable Playwright spec and npm script.
+
+### Session status
+- Complete

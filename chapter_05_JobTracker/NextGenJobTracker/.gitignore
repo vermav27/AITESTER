@@ -10,3 +10,4 @@ coverage/
 job-tracker-backup-*.json
 playwright-report/
 test-results/
+.vercel

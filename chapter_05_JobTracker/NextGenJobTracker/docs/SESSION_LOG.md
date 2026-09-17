@@ -431,3 +431,55 @@
 
 ### Session status
 - Complete
+
+## 2026-09-17T18:41:22Z — Session 09
+
+### Goals
+- Deploy the local-first NextGen Job Tracker app to Vercel.
+
+### Requirements and decisions
+- Used the Vercel CLI deployment path from the app root.
+- Created the Vercel project with the valid lowercase name `next-gen-job-tracker`.
+- Kept the production build command as `npm run build` and output directory as `dist`.
+
+### Work completed
+- Installed dependencies locally with `npm ci`.
+- Ran local validation before deployment.
+- Linked the app folder to Vercel project `next-gen-coders6/next-gen-job-tracker`.
+- Deployed production to `https://next-gen-job-tracker.vercel.app`.
+- Added `.vercel` to `.gitignore` so local Vercel metadata is not committed.
+
+### Files changed
+- Modified: `.gitignore`
+- Modified: `docs/SESSION_LOG.md`
+
+### Dependencies
+- Added: none
+- Removed: none
+
+### Database or schema changes
+- None
+
+### Verification
+- `npm ci` completed with zero vulnerabilities reported.
+- `npm run lint` passed.
+- `npm test` passed: 6 files, 32 tests.
+- `npm run build` passed and emitted `dist`.
+- `npm run preview` served the built app locally with HTTP 200.
+- Vercel build logs show `npm run build` completed successfully.
+- Production URL `https://next-gen-job-tracker.vercel.app` returned HTTP 200.
+
+### Problems and resolutions
+- Initial Vercel deploy failed because no credentials were present; authentication completed through the CLI device flow.
+- The first project creation attempt inferred an invalid uppercase project name; created `next-gen-job-tracker` instead.
+- Vercel Git auto-connect failed for `vermav27/AITESTER`; the production CLI deployment still completed successfully. Run `vercel git connect` later if push-based deployments are required.
+
+### Known limitations
+- The deployed app is still local-first; browser data from localhost does not migrate automatically to the Vercel origin.
+- Git-based automatic deployments are not connected yet.
+
+### Next recommended task
+- Connect the Git repository in Vercel with `vercel git connect` or through the Vercel dashboard if automatic redeploys on push are required.
+
+### Session status
+- Complete

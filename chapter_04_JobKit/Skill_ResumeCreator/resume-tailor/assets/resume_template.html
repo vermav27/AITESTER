@@ -1,0 +1,57 @@
+<!--
+  RESUME TEMPLATE (Google Docs HTML import safe)
+  - Replace every {{PLACEHOLDER}}. Delete sections that don't apply.
+  - Inline styles only. Escape & as &amp;.
+  - Green span  = added/changed for this job:  <span style="background-color:#c8f7c5;">...</span>
+  - Yellow span = candidate must confirm:       <span style="background-color:#fff59d;">...</span>
+  - For a clean/final copy: remove the REVIEW NOTE paragraph and all highlight spans.
+  - Copy the <h2> heading, experience block, and <li> patterns as many times as needed.
+-->
+<html><head><meta charset="utf-8"><title>{{CANDIDATE_NAME}} - {{JOB_TITLE}} Resume</title></head>
+<body style="font-family:Arial, sans-serif;font-size:10pt;color:#222222;line-height:1.2;">
+
+<!-- REVIEW NOTE: review copy only -->
+<p style="margin:0 0 8pt 0;padding:4pt;border:1px solid #999999;"><span style="font-size:8.5pt;color:#555555;"><b>REVIEW NOTE (delete before sending):</b> <span style="background-color:#c8f7c5;">Green</span> = added or changed for the {{COMPANY}} {{JOB_TITLE}} role. <span style="background-color:#fff59d;">Yellow</span> = please confirm this is accurate, then edit or delete. Before applying, press Ctrl+A, click the highlighter icon, and choose None.</span></p>
+
+<!-- HEADER -->
+<p style="text-align:center;margin:0;"><span style="font-family:Arial;font-size:22pt;font-weight:bold;color:#1f3864;">{{CANDIDATE_NAME_UPPERCASE}}</span></p>
+<p style="text-align:center;margin:3pt 0 0 0;"><span style="font-family:Arial;font-size:10.5pt;font-weight:bold;color:#2e5c8a;">{{HEADLINE: Target Title &nbsp;|&nbsp; Theme 1 &nbsp;|&nbsp; Theme 2}}</span></p>
+<p style="text-align:center;margin:4pt 0 0 0;"><span style="font-family:Arial;font-size:9.5pt;">{{City, Country}} &nbsp;|&nbsp; {{Phone}} &nbsp;|&nbsp; <a href="mailto:{{EMAIL}}">{{EMAIL}}</a> &nbsp;|&nbsp; <a href="https://{{LINKEDIN_PATH}}">{{LINKEDIN_DISPLAY}}</a> &nbsp;|&nbsp; <a href="https://{{GITHUB_PATH}}">{{GITHUB_DISPLAY}}</a></span></p>
+
+<!-- SECTION HEADING PATTERN -->
+<h2 style="font-family:Arial;font-size:11pt;font-weight:bold;color:#1f3864;margin:12pt 0 4pt 0;padding-bottom:2pt;border-bottom:1px solid #1f3864;">PROFESSIONAL SUMMARY</h2>
+<p style="margin:0;">{{3–4 sentence summary}}</p>
+
+<h2 style="font-family:Arial;font-size:11pt;font-weight:bold;color:#1f3864;margin:12pt 0 4pt 0;padding-bottom:2pt;border-bottom:1px solid #1f3864;">CORE SKILLS</h2>
+<!-- One line per group; the job's categories first -->
+<p style="margin:0 0 2pt 0;"><b>{{Group label}}:</b> {{comma-separated skills}}</p>
+<p style="margin:0;"><b>{{Last group label}}:</b> {{comma-separated skills}}</p>
+
+<h2 style="font-family:Arial;font-size:11pt;font-weight:bold;color:#1f3864;margin:12pt 0 4pt 0;padding-bottom:2pt;border-bottom:1px solid #1f3864;">PROFESSIONAL EXPERIENCE</h2>
+
+<!-- EMPLOYER BLOCK PATTERN -->
+<p style="margin:0;"><span style="font-size:10.5pt;font-weight:bold;">{{Employer}}</span> &nbsp;|&nbsp; {{City, Country}}</p>
+<p style="margin:0 0 3pt 0;"><i>{{Real Job Title}} &nbsp;|&nbsp; {{Mon YYYY}} – {{Mon YYYY or Present}}</i></p>
+
+<!-- OPTIONAL SUB-GROUP LABEL (e.g., Delivery & Team Support) -->
+<p style="margin:4pt 0 1pt 0;"><b>{{Sub-group label}}</b></p>
+<ul style="margin-top:0;margin-bottom:4pt;">
+<li style="margin-bottom:2pt;">{{Action + scope + tool/method + result}}</li>
+</ul>
+
+<!-- CLIENT / PROJECT BLOCK PATTERN (within an employer) -->
+<p style="margin:8pt 0 0 0;"><b>Client: {{Client}} ({{Country}}, {{Domain}})</b> &nbsp;|&nbsp; {{Focus area}}</p>
+<p style="margin:0 0 2pt 0;"><i>{{Mon YYYY}} – {{Mon YYYY or Present}}</i></p>
+<ul style="margin-top:0;margin-bottom:4pt;">
+<li style="margin-bottom:2pt;">{{Bullet}}</li>
+</ul>
+
+<h2 style="font-family:Arial;font-size:11pt;font-weight:bold;color:#1f3864;margin:12pt 0 4pt 0;padding-bottom:2pt;border-bottom:1px solid #1f3864;">EDUCATION &amp; CERTIFICATION</h2>
+<p style="margin:0 0 2pt 0;"><b>{{Degree}}</b> &nbsp;|&nbsp; {{University, City, State}} &nbsp;|&nbsp; {{Year}}</p>
+<p style="margin:0;"><b>{{Certification}}</b> &nbsp;|&nbsp; {{Issuer}} &nbsp;|&nbsp; {{Year}}</p>
+
+<h2 style="font-family:Arial;font-size:11pt;font-weight:bold;color:#1f3864;margin:12pt 0 4pt 0;padding-bottom:2pt;border-bottom:1px solid #1f3864;">ADDITIONAL</h2>
+<p style="margin:0 0 2pt 0;"><b>Work Setup:</b> {{distributed teams / time zones / shift availability}}</p>
+<p style="margin:0;"><b>Languages:</b> {{Languages}}</p>
+
+</body></html>

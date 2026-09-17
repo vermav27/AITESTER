@@ -304,3 +304,44 @@
 
 ### Session status
 - Complete
+
+## 2026-09-17T17:56:00Z — Session 06
+
+### Goals
+- Add professional spacing between the header logo and supporting text.
+
+### Requirements and decisions
+- Increased the logo-to-subtitle spacing from `4px` to `12px` without changing the logo crop or header structure.
+
+### Work completed
+- Updated the subtitle top margin in the header brand area.
+
+### Files changed
+- Modified: `src/App.tsx`
+- Modified: `docs/SESSION_LOG.md`
+
+### Dependencies
+- Added: none
+- Removed: none
+
+### Database or schema changes
+- None
+
+### Verification
+- `npm run lint` — passed.
+- `npm test` — passed, 6 files and 32 tests.
+- `npm run build` — passed.
+- Chromium checks confirmed a `12px` logo-to-subtitle gap in dark and light themes at 1440px and at tablet width, with no overlap, horizontal overflow or console errors.
+- Screenshots saved under ignored `test-results/logo-spacing/`.
+
+### Problems and resolutions
+- None.
+
+### Known limitations
+- Visual screenshot artifacts under `test-results/` are intentionally ignored and not committed.
+
+### Next recommended task
+- No follow-up is required for this spacing adjustment.
+
+### Session status
+- Complete

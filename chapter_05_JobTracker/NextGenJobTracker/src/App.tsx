@@ -328,7 +328,7 @@ export default function App() {
                 />
               </div>
               <h1 className="sr-only">NextGen Job Tracker</h1>
-              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+              <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
                 Local-first applications board stored in this browser.
               </p>
             </div>

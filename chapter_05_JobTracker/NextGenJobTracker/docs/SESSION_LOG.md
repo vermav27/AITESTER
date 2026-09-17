@@ -105,6 +105,53 @@
 ### Session status
 - Complete
 
+## 2026-09-17T15:24:38Z — Session 03
+
+### Goals
+- Embed `Logo/Logo.png` in the web app at the top-left corner.
+- Verify the UI remains aligned and runs smoothly after the logo change.
+
+### Requirements and decisions
+- Used the provided local PNG as a Vite asset through `new URL('../Logo/Logo.png', import.meta.url)`.
+- The PNG is a large square file containing a landscape logo, so the header uses a fixed-size overflow-hidden frame to crop the visible wordmark without stretching or increasing the header unexpectedly.
+- Kept the app title as an `sr-only` heading for accessibility because the visible logo already contains the product name.
+
+### Work completed
+- Added the logo to the header brand area.
+- Preserved the subtitle and header action controls.
+- Verified desktop, tablet and narrow-tablet header layout screenshots.
+
+### Files changed
+- Added: `Logo/Logo.png`
+- Modified: `src/App.tsx`
+- Modified: `docs/SESSION_LOG.md`
+
+### Dependencies
+- Added: none
+- Removed: none
+
+### Database or schema changes
+- None
+
+### Verification
+- `npm run lint` — passed.
+- `npm test` — passed, 6 files and 32 tests.
+- `npm run build` — passed.
+- Production preview layout checks at 1440x900, 1024x768 and 768x900 — passed with 0 console errors, no horizontal overflow, no overlapping header controls and visible logo.
+- Screenshots saved under ignored `test-results/logo-layout/`.
+
+### Problems and resolutions
+- The source image has substantial square-canvas whitespace around a landscape wordmark; constrained it in a crop frame to avoid header misalignment.
+
+### Known limitations
+- Visual screenshot artifacts under `test-results/` are intentionally ignored and not committed.
+
+### Next recommended task
+- Consider using an exported transparent or tightly cropped logo asset in the future to reduce bundle size and simplify CSS cropping.
+
+### Session status
+- Complete
+
 ## 2026-09-17T13:56:33Z — Session 02
 
 ### Goals

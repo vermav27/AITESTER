@@ -34,6 +34,7 @@ import { KanbanBoard } from './components/KanbanBoard';
 import { Modal } from './components/Modal';
 import { Notifications } from './components/Notifications';
 
+const logoUrl = new URL('../Logo/Logo.png', import.meta.url).href;
 const jobRepository = new IndexedDbJobRepository();
 const settingsRepository = new IndexedDbSettingsRepository();
 
@@ -316,8 +317,16 @@ export default function App() {
       <header className="border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/90">
         <div className="mx-auto flex max-w-[1500px] flex-col gap-4 px-4 py-4 lg:px-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h1 className="text-2xl font-bold tracking-normal">NextGen Job Tracker</h1>
+            <div className="min-w-0">
+              <div className="relative h-[68px] w-[220px] overflow-hidden sm:h-[76px] sm:w-[260px]">
+                <img
+                  src={logoUrl}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute left-0 top-0 h-auto w-full max-w-none -translate-y-[34.5%]"
+                />
+              </div>
+              <h1 className="sr-only">NextGen Job Tracker</h1>
               <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
                 Local-first applications board stored in this browser.
               </p>

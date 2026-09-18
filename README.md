@@ -1,6 +1,6 @@
 # AITESTER
 
-AI Engineering resources for Software QA / SDET work. This repository combines LLM basics, prompt engineering templates, a Playwright automation framework example, a local AI application that generates test cases from Jira tickets, and Codex agent skills for drafting review-ready test plans.
+AI Engineering resources for Software QA / SDET work. This repository combines LLM basics, prompt engineering templates, a Playwright automation framework example, a local AI application that generates test cases from Jira tickets, a resume-tailoring skill, a React job-application tracker, and agent skills for drafting review-ready test plans and for turning an idea into LinkedIn and Medium content.
 
 > This README is the top-level map of the repository. Individual projects, such as the Playwright framework and the Jira generator, also include their own README files with deeper setup and usage details.
 
@@ -13,6 +13,9 @@ AI Engineering resources for Software QA / SDET work. This repository combines L
 | `chapter_01_LLM_Basics/` | Grounding rules for safer QA-focused LLM output. |
 | `chapter_02_Prompt_Engineering/` | RICE-POT prompt framework, reusable prompt templates, and the OrangeHRM Playwright framework example. |
 | `chapter_03_Local_TestCase_Generator/` | Local Python + Streamlit Jira AI Test Case Generator using Ollama, with optional Groq support. |
+| `chapter_04_JobKit/` | Resume-tailoring skill that turns one base resume plus a sheet of job descriptions into tailored, ATS-friendly versions. |
+| `chapter_05_JobTracker/` | NextGen Job Tracker: a local-first React + TypeScript single-page app with a Kanban board, dashboard metrics, and an in-app user guide viewer. |
+| `chapter_06_Branding_LinkedIn_Medium/` | LinkedIn and Medium content skill, plus the generated content packs in `Output/`. |
 | `.agents/skills/testplan-create/` | Codex skill for fetching Jira tickets, analyzing requirement gaps, and drafting test plans. |
 | `.agents/output/` | Generated local artifacts such as Markdown/PDF test plans and reviewed design attachments. |
 | `PromptQuickReference.md` | Quick decision guide for selecting the right prompt template. |
@@ -64,31 +67,93 @@ AITester/
 │       ├── APITestingPrompts/
 │       ├── BasicTestCasePrompts/
 │       └── BugsRelatedPrompts/
-└── chapter_03_Local_TestCase_Generator/
-    ├── source/
-    │   ├── Prompt.md
-    │   ├── finetuned_Prompt.md
-    │   └── roughAppDiagram.png
-    ├── template/
-    │   └── testcase_creator.md
-    └── jira-ai-testcase-generator/
+├── chapter_03_Local_TestCase_Generator/
+│   ├── source/
+│   │   ├── Prompt.md
+│   │   ├── finetuned_Prompt.md
+│   │   └── roughAppDiagram.png
+│   ├── template/
+│   │   └── testcase_creator.md
+│   └── jira-ai-testcase-generator/
+│       ├── README.md
+│       ├── app.py
+│       ├── pages/
+│       │   └── settings.py
+│       ├── services/
+│       │   ├── jira_service.py
+│       │   ├── ollama_service.py
+│       │   ├── groq_service.py
+│       │   └── llm_service.py
+│       ├── utils/
+│       │   ├── config_manager.py
+│       │   ├── jira_parser.py
+│       │   ├── prompt_builder.py
+│       │   └── template_loader.py
+│       ├── templates/
+│       │   └── test_case_template.md
+│       └── requirements.txt
+├── chapter_04_JobKit/
+│   ├── Prompts.md
+│   └── Skill_ResumeCreator/
+│       └── resume-tailor/
+│           ├── SKILL.md
+│           ├── assets/
+│           │   ├── job_descriptions_template.xlsx
+│           │   └── resume_template.html
+│           ├── references/
+│           │   ├── review_rubric.md
+│           │   └── writing_rules.md
+│           ├── scripts/
+│           │   ├── keyword_coverage.py
+│           │   └── parse_jobs.py
+│           ├── Jobs/
+│           │   └── Jobs_17Sept.xlsx
+│           ├── Old Resume/
+│           │   └── Vineet Verma_10yr_Resume.pdf
+│           └── Tailored Resumes/
+│               ├── facts.md
+│               └── *.html                  # per-job review copies
+├── chapter_05_JobTracker/
+│   ├── 1_BasicStarting_ImprovisedPrompt.md
+│   ├── 2_TabsPrompt.md
+│   ├── 3_Prompt_DownloadOption.md
+│   ├── BasicStarting_Prompt.md
+│   └── NextGenJobTracker/
+│       ├── README.md
+│       ├── index.html
+│       ├── package.json
+│       ├── vercel.json
+│       ├── src/
+│       │   ├── App.tsx
+│       │   ├── components/
+│       │   └── services/
+│       ├── tests/
+│       ├── docs/
+│       │   └── SESSION_LOG.md
+│       └── Architecture/
+│           ├── Architecture.png
+│           └── NextGenJobTracker_User_Guide.pdf
+└── chapter_06_Branding_LinkedIn_Medium/
+    ├── Skill_LinkedInMedium_PostCreator/
+    │   ├── SKILL.md
+    │   ├── references/
+    │   │   ├── brand-voice.md
+    │   │   ├── example-pack.md
+    │   │   ├── hooks.md
+    │   │   ├── image-prompts.md
+    │   │   ├── linkedin-post.md
+    │   │   ├── medium-article.md
+    │   │   └── ImageReference/
+    │   │       └── Reference.png
+    │   └── scripts/
+    │       └── lint_content.py
+    └── Output/
         ├── README.md
-        ├── app.py
-        ├── pages/
-        │   └── settings.py
-        ├── services/
-        │   ├── jira_service.py
-        │   ├── ollama_service.py
-        │   ├── groq_service.py
-        │   └── llm_service.py
-        ├── utils/
-        │   ├── config_manager.py
-        │   ├── jira_parser.py
-        │   ├── prompt_builder.py
-        │   └── template_loader.py
-        ├── templates/
-        │   └── test_case_template.md
-        └── requirements.txt
+        ├── 01-hooks.md
+        ├── 02-linkedin-post.md
+        ├── 03-linkedin-card-prompt.md
+        ├── 04-medium-article.md
+        └── 05-medium-header-prompt.md
 ```
 
 ---
@@ -198,6 +263,86 @@ For the full application README, architecture diagram, troubleshooting, and vali
 
 ---
 
+## Chapter 4 - JobKit
+
+Where Chapter 3 generates test cases from a ticket, Chapter 4 handles the job-search side: one base resume plus N job descriptions becomes N tailored, ATS-friendly resumes.
+
+| File / Folder | Description |
+|---|---|
+| `Prompts.md` | Prompts used while building the chapter's job-search tooling. |
+| `Skill_ResumeCreator/resume-tailor/SKILL.md` | The `resume-tailor` skill: reads a base resume plus a sheet of job descriptions, then writes one tailored resume per job. |
+| `Skill_ResumeCreator/resume-tailor/scripts/parse_jobs.py` | Parses an Excel/CSV job sheet into structured `jobs.json`. |
+| `Skill_ResumeCreator/resume-tailor/scripts/keyword_coverage.py` | Rough keyword-coverage check between a job description and a resume. |
+| `Skill_ResumeCreator/resume-tailor/references/writing_rules.md` | Truthfulness and writing rules, which outrank keyword coverage every time. |
+| `Skill_ResumeCreator/resume-tailor/references/review_rubric.md` | Rubric and output format for scored resume reviews and rebuilds. |
+| `Skill_ResumeCreator/resume-tailor/assets/` | HTML resume template and the job-description spreadsheet template. |
+| `Skill_ResumeCreator/resume-tailor/Jobs/` | Job-description spreadsheet input. |
+| `Skill_ResumeCreator/resume-tailor/Old Resume/` | The original base resume PDF. |
+| `Skill_ResumeCreator/resume-tailor/Tailored Resumes/` | Generated per-job review copies, plus `facts.md`: the source of truth for what the candidate has actually done. |
+
+Every keyword is classified as Match, Reframe, Likely or Gap. Gaps are reported with honest advice and never added. In the review copies, added or changed text is highlighted green and anything needing the candidate's confirmation is highlighted yellow.
+
+---
+
+## Chapter 5 - Job Tracker
+
+Chapter 5 is **NextGen Job Tracker**, a local-first single-page React app for running an active job search: a Kanban board, a metrics dashboard, backup and restore, and a five-page user guide bundled into the build.
+
+| File / Folder | Description |
+|---|---|
+| `NextGenJobTracker/README.md` | Application README: views, storage model, testing, and deployment readiness. |
+| `NextGenJobTracker/src/` | `App.tsx`, `components/` (Dashboard, KanbanBoard, JobCard, JobForm, HelpGuide, UserGuideViewer), and `services/` (job logic, dashboard metrics, import/export). |
+| `NextGenJobTracker/tests/` | Vitest coverage for dashboard metrics, tab behaviour, the guide viewer, URL and platform handling, dates, import/export and IndexedDB persistence. |
+| `NextGenJobTracker/docs/SESSION_LOG.md` | Session log for the build. |
+| `NextGenJobTracker/Architecture/` | Architecture diagram and the five-page user guide PDF. |
+| `1_BasicStarting_ImprovisedPrompt.md`, `2_TabsPrompt.md`, `3_Prompt_DownloadOption.md`, `BasicStarting_Prompt.md` | The numbered build prompts behind the app. |
+
+Storage is browser-local through IndexedDB (`idb`): no backend, no accounts, no remote database, no analytics. Persistence is tied to one browser profile and origin, so **Export JSON** is the backup mechanism.
+
+```bash
+cd chapter_05_JobTracker/NextGenJobTracker
+npm install
+npm run dev        # http://127.0.0.1:5173
+npm run lint
+npm test
+```
+
+---
+
+## Chapter 6 - Branding (LinkedIn & Medium)
+
+Chapter 6 holds the content engine used to publish on LinkedIn and Medium: one raw idea in, a five-piece pack out.
+
+| File / Folder | Description |
+|---|---|
+| `Skill_LinkedInMedium_PostCreator/SKILL.md` | The `vineet-qa-content` skill. Turns a title, bullets, notes or an image into 3 controversial hooks, a LinkedIn post, an X-style card prompt, a Medium article and a cyberpunk header prompt. |
+| `Skill_LinkedInMedium_PostCreator/references/brand-voice.md` | The fact sheet (the only personal claims allowed), plus voice traits, content pillars, banned words and client-naming rules. |
+| `Skill_LinkedInMedium_PostCreator/references/hooks.md` | Hook types, heat levels and the defensibility test. |
+| `Skill_LinkedInMedium_PostCreator/references/linkedin-post.md` | LinkedIn spec: 150–300 words, → arrows, one offer, PS sign-off, 3–5 hashtags. |
+| `Skill_LinkedInMedium_PostCreator/references/medium-article.md` | Medium spec: 1,000–1,800 words, one table, one code block, one list, pull quote and bio. |
+| `Skill_LinkedInMedium_PostCreator/references/image-prompts.md` | Both image prompt templates, plus the topic-to-metaphor table. |
+| `Skill_LinkedInMedium_PostCreator/references/example-pack.md` | The approved gold-standard pack, used as the bar for new packs. |
+| `Skill_LinkedInMedium_PostCreator/references/ImageReference/Reference.png` | Reference image showing the X-style card format. |
+| `Skill_LinkedInMedium_PostCreator/scripts/lint_content.py` | Brand-rule linter for the post, article and card. |
+| `Output/` | Generated content packs. See [`Output/README.md`](./chapter_06_Branding_LinkedIn_Medium/Output/README.md). |
+
+### Generated Content Packs
+
+| Pack | Pieces | Folder |
+|---|---|---|
+| AI influencers — "AI Influencers Are Quietly Taking Over Your Feed. Here Is How People Make Them." | 3 hooks, LinkedIn post, card prompt, Medium article, cyber header prompt | `chapter_06_Branding_LinkedIn_Medium/Output/` |
+
+Lint a pack before publishing. The linter reads raw text, so the post is piped in from its copy-paste block:
+
+```bash
+cd chapter_06_Branding_LinkedIn_Medium/Skill_LinkedInMedium_PostCreator
+awk '/^```text$/{f=1;next} /^```$/{f=0} f' ../Output/02-linkedin-post.md | python3 scripts/lint_content.py linkedin -
+python3 scripts/lint_content.py medium ../Output/04-medium-article.md
+python3 scripts/lint_content.py card ../Output/03-linkedin-card-prompt.md
+```
+
+---
+
 ## Codex Agent Skill - Test Plan Creator
 
 The `.agents/skills/testplan-create/` skill turns a Jira ticket into a human-review-ready test plan. It is designed for QA/test planning work such as:
@@ -295,3 +440,6 @@ The generated test plan should always include gaps/questions, assumptions, risks
 4. Explore the OrangeHRM Playwright framework as a full automation example.
 5. Run the Jira AI Test Case Generator from Chapter 3 and customize `templates/test_case_template.md` for your team.
 6. Use `.agents/skills/testplan-create/` to draft Jira-based test plans and review the generated artifacts in `.agents/output/`.
+7. Use `chapter_04_JobKit/Skill_ResumeCreator/resume-tailor/SKILL.md` to tailor a resume per job description, then review the copies in `Tailored Resumes/`.
+8. Run `chapter_05_JobTracker/NextGenJobTracker` to track applications end to end, and read its user guide from inside the app.
+9. Use the Chapter 6 content skill to turn an idea into a LinkedIn and Medium pack, then lint it before publishing.

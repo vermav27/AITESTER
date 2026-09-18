@@ -5,7 +5,7 @@
 ### Goals
 - Build a local-first single-page Job Application Tracker in React, TypeScript and Vite.
 - Keep all application work inside `chapter_05_JobTracker/NextGenJobTracker`.
-- Follow the IndexedDB, accessibility, backup, platform-detection and documentation requirements from `ImprovisedPrompt.md`.
+- Follow the IndexedDB, accessibility, backup, platform-detection and documentation requirements from `chapter_05_JobTracker/1_BasicStarting_ImprovisedPrompt.md`.
 
 ### Requirements and decisions
 - Existing repository root is `/Users/vineetverma/Desktop/Projects/AITester`.
@@ -544,7 +544,7 @@
 - Use native SVG and existing dependencies; do not add a chart package or change IndexedDB.
 
 ### Work completed
-- Saved the approved RICEPOT implementation plan in `chapter_05_JobTracker/TabsPrompt.md`.
+- Saved the approved RICEPOT implementation plan in `chapter_05_JobTracker/2_TabsPrompt.md`.
 - Added Dashboard and Job Tracker Board tabs with keyboard navigation and non-persisted Dashboard default.
 - Added seven live metric cards, a native SVG status donut and proportional status bars.
 - Added green Offer and red Rejected outcome lists with company, role and newest-updated ordering.
@@ -553,7 +553,7 @@
 - Updated the README with the new application views and test coverage.
 
 ### Files changed
-- Added: `../TabsPrompt.md`
+- Added: `../2_TabsPrompt.md`
 - Added: `src/components/Dashboard.tsx`
 - Added: `src/services/dashboardMetrics.ts`
 - Added: `tests/dashboardMetrics.test.ts`
@@ -650,7 +650,7 @@
 - The bundled guide remains browser-accessible by necessity; the interface discourages casual downloading but cannot provide absolute content protection in a static frontend.
 
 ### Work completed
-- Saved the approved RICEPOT plan in `chapter_05_JobTracker/Prompt_DownloadOption.md`.
+- Saved the approved RICEPOT plan in `chapter_05_JobTracker/3_Prompt_DownloadOption.md`.
 - Added a backward-compatible Modal header action and `xl` size.
 - Added an in-app PDF.js viewer with lazy loading, a Vite worker asset, high-DPI canvas rendering, accessible extracted page text, bounded zoom, navigation, retry and stale-task cleanup.
 - Added a non-stacked Help-to-viewer transition and final focus restoration to the Help launcher.
@@ -660,7 +660,7 @@
 - Updated the README with viewer usage, coverage and the static-frontend content-protection limitation.
 
 ### Files changed
-- Added: `../Prompt_DownloadOption.md`
+- Added: `../3_Prompt_DownloadOption.md`
 - Added: `src/components/UserGuideViewer.tsx`
 - Added: `src/vite-env.d.ts`
 - Added: `tests/helpGuideViewer.test.tsx`
@@ -702,6 +702,25 @@
 
 ### Next recommended task
 - Push or deploy the verified commit only after separate authorization.
+
+### Session status
+- Complete
+
+## 2026-09-18T06:11:44Z - Session 14
+
+### Goals
+- Keep prompt-file self-references and the session log accurate after the prompt documents were renamed.
+
+### Work completed
+- Recorded `prompt.md` as `BasicStarting_Prompt.md`.
+- Recorded `ImprovisedPrompt.md` as `1_BasicStarting_ImprovisedPrompt.md`.
+- Updated the Dashboard plan references from `TabsPrompt.md` to `2_TabsPrompt.md`.
+- Updated the viewer plan references from `Prompt_DownloadOption.md` to `3_Prompt_DownloadOption.md`.
+- Updated earlier session-log paths to the current filenames.
+
+### Verification
+- Confirmed all four renamed prompt files exist in `chapter_05_JobTracker`.
+- Confirmed no active prompt instruction, output path, task, assumption or earlier file list points to a previous prompt filename; old names remain only in this rename record.
 
 ### Session status
 - Complete

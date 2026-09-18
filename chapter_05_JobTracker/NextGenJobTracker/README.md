@@ -15,6 +15,13 @@ Open **How to use tracker?** and choose **View User Guide** to read the bundled 
 
 The viewer intentionally provides no download, print, open-in-new-tab, native browser toolbar, or raw-file-link controls. Because this is a static frontend and the PDF must be delivered to the browser for rendering, those interface restrictions discourage casual downloading but cannot make the document unrecoverable through browser developer tools, caches, or screenshots.
 
+## Project Documentation
+
+- [Architecture diagram](Architecture/Architecture.png) shows the application layers, Dashboard and board flow, IndexedDB persistence, backup path, and PDF.js viewer integration.
+- [Five-page user guide](Architecture/NextGenJobTracker_User_Guide.pdf) covers Dashboard metrics, the Kanban workflow, adding and finding jobs, the in-app guide viewer, themes, backup/restore, and browser-local storage.
+
+The PDF is bundled into the production build and displayed by the in-app viewer.
+
 ## Prerequisites
 
 - Node.js 20.16 or newer
@@ -107,6 +114,8 @@ vercel --prod
 ```
 
 Do not deploy from this project without explicit authorization. The included `vercel.json` provides an SPA fallback so refreshed routes resolve to the app.
+
+For a Git-connected Vercel project whose Root Directory is `chapter_05_JobTracker/NextGenJobTracker`, the configured `ignoreCommand` compares only changes under that project root. Commits that change only files outside this folder skip the build; commits that change this app folder proceed with the automatic deployment. This behavior takes effect after the repository and production branch are connected in Vercel.
 
 ## Future Authentication Extension Points
 

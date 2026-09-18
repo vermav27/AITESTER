@@ -1,14 +1,16 @@
 import {
   ChevronDown,
+  Columns3,
   Download,
   HelpCircle,
+  LayoutDashboard,
   Plus,
   Search,
   Trash2,
   Upload,
   X,
 } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { JOB_STATUSES, type JobStatus } from './constants/statuses';
 import { replaceDatabaseContents } from './repositories/backupRepository';
 import { DEFAULT_SETTINGS } from './repositories/contracts';
@@ -29,6 +31,7 @@ import {
 } from './services/jobLogic';
 import type { AppSettings, Job, JobDraft, SortMode, ThemePreference, ToastMessage } from './types/job';
 import { ConfirmDialog } from './components/ConfirmDialog';
+import { Dashboard } from './components/Dashboard';
 import { HelpGuide } from './components/HelpGuide';
 import { JobForm } from './components/JobForm';
 import { KanbanBoard } from './components/KanbanBoard';
@@ -38,6 +41,10 @@ import { Notifications } from './components/Notifications';
 const logoUrl = new URL('../Logo/Logo.png', import.meta.url).href;
 const jobRepository = new IndexedDbJobRepository();
 const settingsRepository = new IndexedDbSettingsRepository();
+
+type AppView = 'dashboard' | 'board';
+
+const APP_VIEWS: AppView[] = ['dashboard', 'board'];
 
 function useResolvedTheme(theme: ThemePreference) {
   useEffect(() => {
@@ -75,6 +82,7 @@ export default function App() {
   const [importPlan, setImportPlan] = useState<ImportPlan | null>(null);
   const [replaceConfirmed, setReplaceConfirmed] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
+  const [activeView, setActiveView] = useState<AppView>('dashboard');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useResolvedTheme(settings.theme);
@@ -145,6 +153,30 @@ export default function App() {
 
   async function handleSortChange(sortMode: SortMode) {
     await updateSettings({ ...settings, sortMode }, 'Sort preference saved.');
+  }
+
+  function handleTabKeyDown(event: KeyboardEvent<HTMLButtonElement>, currentView: AppView) {
+    const currentIndex = APP_VIEWS.indexOf(currentView);
+    let nextIndex: number | null = null;
+
+    if (event.key === 'ArrowRight') {
+      nextIndex = (currentIndex + 1) % APP_VIEWS.length;
+    } else if (event.key === 'ArrowLeft') {
+      nextIndex = (currentIndex - 1 + APP_VIEWS.length) % APP_VIEWS.length;
+    } else if (event.key === 'Home') {
+      nextIndex = 0;
+    } else if (event.key === 'End') {
+      nextIndex = APP_VIEWS.length - 1;
+    }
+
+    if (nextIndex === null) {
+      return;
+    }
+
+    event.preventDefault();
+    const nextView = APP_VIEWS[nextIndex];
+    setActiveView(nextView);
+    window.requestAnimationFrame(() => document.getElementById(`${nextView}-tab`)?.focus());
   }
 
   async function handleSaveDraft(draft: JobDraft) {
@@ -369,7 +401,84 @@ export default function App() {
             </div>
           </div>
 
-          <div className="grid items-end gap-3 md:grid-cols-[minmax(260px,1fr)_auto_auto]">
+          <div className="flex flex-wrap items-end justify-between gap-3 border-t border-slate-200 pt-3 dark:border-slate-800">
+            <div
+              className="inline-flex max-w-full gap-1 rounded-lg border border-slate-200 bg-slate-100 p-1 dark:border-slate-700 dark:bg-slate-950"
+              role="tablist"
+              aria-label="Application views"
+            >
+              <button
+                id="dashboard-tab"
+                type="button"
+                role="tab"
+                aria-selected={activeView === 'dashboard'}
+                aria-controls="dashboard-panel"
+                tabIndex={activeView === 'dashboard' ? 0 : -1}
+                className={`inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 ${
+                  activeView === 'dashboard'
+                    ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white'
+                    : 'text-slate-600 hover:bg-white/70 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800/70 dark:hover:text-white'
+                }`}
+                onClick={() => setActiveView('dashboard')}
+                onKeyDown={(event) => handleTabKeyDown(event, 'dashboard')}
+              >
+                <LayoutDashboard className="h-4 w-4" aria-hidden="true" />
+                Dashboard
+              </button>
+              <button
+                id="board-tab"
+                type="button"
+                role="tab"
+                aria-selected={activeView === 'board'}
+                aria-controls="board-panel"
+                tabIndex={activeView === 'board' ? 0 : -1}
+                className={`inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 ${
+                  activeView === 'board'
+                    ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white'
+                    : 'text-slate-600 hover:bg-white/70 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800/70 dark:hover:text-white'
+                }`}
+                onClick={() => setActiveView('board')}
+                onKeyDown={(event) => handleTabKeyDown(event, 'board')}
+              >
+                <Columns3 className="h-4 w-4" aria-hidden="true" />
+                Job Tracker Board
+              </button>
+            </div>
+
+            <label className="field-label compact w-36">
+              Theme
+              <div className="select-control">
+                <select className="field-input h-10" value={settings.theme} onChange={(event) => void handleThemeChange(event.target.value as ThemePreference)}>
+                  <option value="system">System</option>
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                </select>
+                <ChevronDown className="select-chevron" aria-hidden="true" />
+              </div>
+            </label>
+          </div>
+        </div>
+      </header>
+
+      <section className="mx-auto max-w-[1500px] px-4 py-5 lg:px-6">
+        <div
+          id="dashboard-panel"
+          role="tabpanel"
+          aria-labelledby="dashboard-tab"
+          tabIndex={0}
+          hidden={activeView !== 'dashboard'}
+        >
+          <Dashboard jobs={jobs} />
+        </div>
+
+        <div
+          id="board-panel"
+          role="tabpanel"
+          aria-labelledby="board-tab"
+          tabIndex={0}
+          hidden={activeView !== 'board'}
+        >
+          <div className="mb-4 grid items-end gap-3 md:grid-cols-[minmax(260px,1fr)_auto]">
             <label className="relative block">
               <span className="sr-only">Search company and role</span>
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" aria-hidden="true" />
@@ -392,7 +501,7 @@ export default function App() {
               ) : null}
             </label>
 
-            <label className="field-label compact">
+            <label className="field-label compact md:w-36">
               Sort
               <div className="select-control">
                 <select className="field-input h-10" value={settings.sortMode} onChange={(event) => void handleSortChange(event.target.value as SortMode)}>
@@ -403,59 +512,45 @@ export default function App() {
                 <ChevronDown className="select-chevron" aria-hidden="true" />
               </div>
             </label>
-
-            <label className="field-label compact">
-              Theme
-              <div className="select-control">
-                <select className="field-input h-10" value={settings.theme} onChange={(event) => void handleThemeChange(event.target.value as ThemePreference)}>
-                  <option value="system">System</option>
-                  <option value="light">Light</option>
-                  <option value="dark">Dark</option>
-                </select>
-                <ChevronDown className="select-chevron" aria-hidden="true" />
-              </div>
-            </label>
           </div>
-        </div>
-      </header>
 
-      <section className="mx-auto max-w-[1500px] px-4 py-5 lg:px-6">
-        {isEmpty ? (
-          <div className="mx-auto mt-10 max-w-2xl rounded-lg border border-slate-200 bg-white p-6 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900">
-            <h2 className="text-xl font-semibold">Start tracking your applications</h2>
-            <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
-              Add roles from job boards, company career pages or recruiter links. Your data remains in the current browser profile and should be backed up with JSON export.
-            </p>
-            <div className="mt-5 flex flex-wrap justify-center gap-3">
-              <button type="button" className="btn-primary" onClick={() => setFormJob('new')}>
-                <Plus className="h-4 w-4" aria-hidden="true" />
-                Add your first job
-              </button>
-              <button type="button" className="btn-secondary" onClick={() => setShowHelp(true)}>
-                <HelpCircle className="h-4 w-4" aria-hidden="true" />
-                How to use tracker?
-              </button>
+          {isEmpty ? (
+            <div className="mx-auto mt-10 max-w-2xl rounded-lg border border-slate-200 bg-white p-6 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900">
+              <h2 className="text-xl font-semibold">Start tracking your applications</h2>
+              <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                Add roles from job boards, company career pages or recruiter links. Your data remains in the current browser profile and should be backed up with JSON export.
+              </p>
+              <div className="mt-5 flex flex-wrap justify-center gap-3">
+                <button type="button" className="btn-primary" onClick={() => setFormJob('new')}>
+                  <Plus className="h-4 w-4" aria-hidden="true" />
+                  Add your first job
+                </button>
+                <button type="button" className="btn-secondary" onClick={() => setShowHelp(true)}>
+                  <HelpCircle className="h-4 w-4" aria-hidden="true" />
+                  How to use tracker?
+                </button>
+              </div>
             </div>
-          </div>
-        ) : (
-          <>
-            {query.trim() && filteredJobs.length === 0 ? (
-              <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-100">
-                No matching jobs.
-              </div>
-            ) : null}
-            <KanbanBoard
-              jobs={filteredJobs}
-              allJobs={jobs}
-              query={query}
-              sortMode={settings.sortMode}
-              onCommit={commitJobs}
-              onEdit={(job) => setFormJob(job)}
-              onDelete={(job) => setDeleteJob(job)}
-              onStatusChange={(job, status) => void handleStatusChange(job, status)}
-            />
-          </>
-        )}
+          ) : (
+            <>
+              {query.trim() && filteredJobs.length === 0 ? (
+                <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-100">
+                  No matching jobs.
+                </div>
+              ) : null}
+              <KanbanBoard
+                jobs={filteredJobs}
+                allJobs={jobs}
+                query={query}
+                sortMode={settings.sortMode}
+                onCommit={commitJobs}
+                onEdit={(job) => setFormJob(job)}
+                onDelete={(job) => setDeleteJob(job)}
+                onStatusChange={(job, status) => void handleStatusChange(job, status)}
+              />
+            </>
+          )}
+        </div>
       </section>
 
       {formJob ? (

@@ -1,6 +1,13 @@
 # NextGen Job Tracker
 
-A simple local-first Job Application Tracker built as a single-page React application. It helps one person save job leads, move applications through a Kanban workflow, recognize common job-platform URLs, export backups, and restore data later.
+A simple local-first Job Application Tracker built as a single-page React application. It helps one person review application metrics, save job leads, move applications through a Kanban workflow, recognize common job-platform URLs, export backups, and restore data later.
+
+## Application Views
+
+- **Dashboard** opens by default and shows live totals for every job status, an accessible status-distribution chart, and company lists for Offer and Rejected outcomes.
+- **Job Tracker Board** contains the complete Kanban workflow, search, sorting, drag-and-drop and non-drag status controls.
+
+Dashboard values are calculated from the same in-memory job collection loaded from IndexedDB. Switching views does not change saved data, and board search remains available when returning to the board during the same page session.
 
 ## Prerequisites
 
@@ -33,7 +40,7 @@ npm run lint
 npm test
 ```
 
-The tests cover required-field validation, safe URL handling, URL normalization, all supported platform mappings, lookalike-domain rejection, date behavior, automatic applied-date behavior, search, sorting, import validation, merge conflicts, and IndexedDB persistence with `fake-indexeddb`.
+The tests cover dashboard calculations and rendering, accessible tab behavior, required-field validation, safe URL handling, URL normalization, all supported platform mappings, lookalike-domain rejection, date behavior, automatic applied-date behavior, search, sorting, import validation, merge conflicts, and IndexedDB persistence with `fake-indexeddb`.
 
 ## Production Build
 

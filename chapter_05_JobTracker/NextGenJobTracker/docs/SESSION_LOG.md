@@ -483,3 +483,49 @@
 
 ### Session status
 - Complete
+
+## 2026-09-18T03:47:20Z — Session 10
+
+### Goals
+- Configure Vercel/Git behavior so automatic deployments run only when `chapter_05_JobTracker/NextGenJobTracker` changes.
+
+### Requirements and decisions
+- Set the Vercel project Root Directory to `chapter_05_JobTracker/NextGenJobTracker`.
+- Added `ignoreCommand` to `vercel.json` so commits without changes in the app root are skipped.
+- Kept the build command as `npm run build` and output directory as `dist`.
+
+### Work completed
+- Updated Vercel project settings for `next-gen-coders6/next-gen-job-tracker`.
+- Added Vercel schema metadata and the folder-scoped ignored-build command to `vercel.json`.
+- Attempted to connect `https://github.com/vermav27/AITESTER.git` with `vercel git connect`; Vercel rejected repository access.
+
+### Files changed
+- Modified: `vercel.json`
+- Modified: `docs/SESSION_LOG.md`
+
+### Dependencies
+- Added: none
+- Removed: none
+
+### Database or schema changes
+- None
+
+### Verification
+- Parsed `vercel.json` successfully.
+- Confirmed Vercel project Root Directory is `chapter_05_JobTracker/NextGenJobTracker`.
+- Confirmed Vercel Build Command is `npm run build` and Output Directory is `dist`.
+- Confirmed `git diff HEAD^ HEAD --quiet -- .` exits `1` from the app root when the app changed, which allows a deployment.
+- `npm run build` passed.
+
+### Problems and resolutions
+- GitHub auto-connect is still blocked by Vercel/GitHub repository authorization. The repository URL is valid from local Git, but Vercel cannot access `vermav27/AITESTER` until the GitHub integration is authorized for that repository.
+
+### Known limitations
+- Automatic Git-triggered deployments are not active until the Vercel GitHub app is connected to the repository.
+- The folder-scoped skip behavior will take effect for Git-triggered deployments after the repository connection is completed and this config is pushed.
+
+### Next recommended task
+- Authorize/connect the GitHub repository in Vercel, then push this commit so Vercel can read the folder-scoped `vercel.json`.
+
+### Session status
+- Complete

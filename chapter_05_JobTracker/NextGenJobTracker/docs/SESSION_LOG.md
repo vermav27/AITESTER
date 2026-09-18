@@ -529,3 +529,111 @@
 
 ### Session status
 - Complete
+
+## 2026-09-18T04:26:50Z — Session 11
+
+### Goals
+- Add accessible Dashboard and Job Tracker Board tabs.
+- Add live job metrics, status visualization and Offer/Rejected outcome lists.
+- Preserve the current local-first Kanban workflow and persistence behavior.
+
+### Requirements and decisions
+- Dashboard is the default, non-persisted view.
+- Dashboard data derives from the existing in-memory job collection.
+- Offer and Rejected lists show company and role, ordered by most recently updated.
+- Use native SVG and existing dependencies; do not add a chart package or change IndexedDB.
+
+### Work completed
+- Saved the approved RICEPOT implementation plan in `chapter_05_JobTracker/TabsPrompt.md`.
+- Added Dashboard and Job Tracker Board tabs with keyboard navigation and non-persisted Dashboard default.
+- Added seven live metric cards, a native SVG status donut and proportional status bars.
+- Added green Offer and red Rejected outcome lists with company, role and newest-updated ordering.
+- Moved search and sorting into the board panel while keeping theme and primary actions global.
+- Added focused dashboard calculation, rendering and tab-interaction tests.
+- Updated the README with the new application views and test coverage.
+
+### Files changed
+- Added: `../TabsPrompt.md`
+- Added: `src/components/Dashboard.tsx`
+- Added: `src/services/dashboardMetrics.ts`
+- Added: `tests/dashboardMetrics.test.ts`
+- Added: `tests/dashboard.test.tsx`
+- Added: `tests/appTabs.test.tsx`
+- Modified: `src/App.tsx`
+- Modified: `README.md`
+- Modified: `docs/SESSION_LOG.md`
+
+### Dependencies
+- Added: none
+- Removed: none
+
+### Database or schema changes
+- None
+
+### Verification
+- `npm run lint` passed.
+- `npm test` passed: 9 files, 39 tests.
+- `npm run build` passed and emitted the production bundle to `dist`.
+- Headed Chromium workflow passed at 1440x900 and 768x900 in light and dark themes.
+- Browser workflow verified a live Add Job update, Offer list update, preserved board search across tab switches and zero console errors.
+- Tablet overflow measurements passed: 768px page width and 736px Kanban board width inside the viewport.
+- Desktop and tablet screenshots were visually inspected for alignment, wrapping, chart rendering and outcome-list presentation.
+
+### Problems and resolutions
+- Initial headed-browser selectors matched nested label text ambiguously; scoped them to the relevant dialog or header control and reran the workflow successfully.
+
+### Known limitations
+- Dashboard metrics represent the current job snapshot; historical trend data is not stored or inferred.
+- The active tab intentionally resets to Dashboard after a page reload.
+
+### Next recommended task
+- Push or deploy the verified commit only when an updated deployment is desired.
+
+### Session status
+- Complete
+
+## 2026-09-18T04:55:37Z — Session 12
+
+### Goals
+- Create a four-to-five page PDF guide in `Architecture` using application screenshots.
+- Explain the tracker from a user's perspective rather than as a technical reference.
+
+### Requirements and decisions
+- Produced a five-page A4 guide covering quick start, Dashboard, board workflow, adding/searching jobs and local data backup.
+- Captured fresh representative screenshots from a disposable browser context with seeded sample jobs.
+- Kept generated screenshot and HTML source artifacts under ignored `test-results/`; only the final PDF is part of the project output.
+
+### Work completed
+- Added `Architecture/NextGenJobTracker_User_Guide.pdf`.
+- Included light Dashboard, Kanban board, search, Add Job and dark-theme screenshots.
+- Documented status movement, sorting, editing, deleting, applied-date behavior, export/import and browser-storage limitations.
+
+### Files changed
+- Added: `Architecture/NextGenJobTracker_User_Guide.pdf`
+- Modified: `docs/SESSION_LOG.md`
+
+### Dependencies
+- Added: none
+- Removed: none
+
+### Database or schema changes
+- None
+
+### Verification
+- Confirmed the output is a PDF 1.4 document with exactly 5 pages.
+- Confirmed all five A4 page renders are 794 by 1123 CSS pixels with no internal overflow.
+- Visually inspected every rendered page for readability, screenshot framing and text clipping.
+- Confirmed `Architecture` contains the existing single PNG and the new PDF only.
+
+### Problems and resolutions
+- The first page-four layout cropped the Add Job screenshot; changed it to a full-width frame and regenerated the PDF.
+- Adjusted the search screenshot crop so the active search field and filtered result are visible.
+
+### Known limitations
+- Screenshots use representative sample jobs and do not contain production or personal application data.
+
+### Next recommended task
+- Share `Architecture/NextGenJobTracker_User_Guide.pdf` with users who need an onboarding reference.
+
+### Session status
+- Complete

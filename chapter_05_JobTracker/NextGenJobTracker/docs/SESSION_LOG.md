@@ -591,3 +591,49 @@
 
 ### Session status
 - Complete
+
+## 2026-09-18T04:55:37Z — Session 12
+
+### Goals
+- Create a four-to-five page PDF guide in `Architecture` using application screenshots.
+- Explain the tracker from a user's perspective rather than as a technical reference.
+
+### Requirements and decisions
+- Produced a five-page A4 guide covering quick start, Dashboard, board workflow, adding/searching jobs and local data backup.
+- Captured fresh representative screenshots from a disposable browser context with seeded sample jobs.
+- Kept generated screenshot and HTML source artifacts under ignored `test-results/`; only the final PDF is part of the project output.
+
+### Work completed
+- Added `Architecture/NextGenJobTracker_User_Guide.pdf`.
+- Included light Dashboard, Kanban board, search, Add Job and dark-theme screenshots.
+- Documented status movement, sorting, editing, deleting, applied-date behavior, export/import and browser-storage limitations.
+
+### Files changed
+- Added: `Architecture/NextGenJobTracker_User_Guide.pdf`
+- Modified: `docs/SESSION_LOG.md`
+
+### Dependencies
+- Added: none
+- Removed: none
+
+### Database or schema changes
+- None
+
+### Verification
+- Confirmed the output is a PDF 1.4 document with exactly 5 pages.
+- Confirmed all five A4 page renders are 794 by 1123 CSS pixels with no internal overflow.
+- Visually inspected every rendered page for readability, screenshot framing and text clipping.
+- Confirmed `Architecture` contains the existing single PNG and the new PDF only.
+
+### Problems and resolutions
+- The first page-four layout cropped the Add Job screenshot; changed it to a full-width frame and regenerated the PDF.
+- Adjusted the search screenshot crop so the active search field and filtered result are visible.
+
+### Known limitations
+- Screenshots use representative sample jobs and do not contain production or personal application data.
+
+### Next recommended task
+- Share `Architecture/NextGenJobTracker_User_Guide.pdf` with users who need an onboarding reference.
+
+### Session status
+- Complete

@@ -6,7 +6,7 @@ Act as a senior React/TypeScript engineer, accessibility specialist, security-aw
 
 ## I - Instructions
 
-- Create `chapter_05_JobTracker/Prompt_DownloadOption.md` containing this approved RICEPOT plan.
+- Create `chapter_05_JobTracker/3_Prompt_DownloadOption.md` containing this approved RICEPOT plan.
 - Add **View User Guide** beside **How to use this tracker** in the Help popup.
 - Open the PDF in a dedicated in-app PDF.js viewer.
 - Expose no Download, Print, Open in New Tab, or direct-file-link controls.
@@ -120,7 +120,7 @@ Existing modal consumers retain their current layout and default size.
 
 ## O - Output
 
-- `chapter_05_JobTracker/Prompt_DownloadOption.md`
+- `chapter_05_JobTracker/3_Prompt_DownloadOption.md`
 - Updated Help popup and shared Modal
 - New in-app PDF.js viewer
 - Updated package manifest and lockfile
@@ -133,7 +133,7 @@ Existing modal consumers retain their current layout and default size.
 
 ## T - Tasks
 
-1. Save this approved framework in `Prompt_DownloadOption.md`.
+1. Save this approved framework in `3_Prompt_DownloadOption.md`.
 2. Install and inspect the resolved `pdfjs-dist` API.
 3. Extend Modal with header action and `xl` size.
 4. Implement non-stacked Help-to-Viewer transitions.
@@ -154,7 +154,7 @@ Existing modal consumers retain their current layout and default size.
 
 ## Assumptions and Limitations
 
-- The confirmed prompt path is `chapter_05_JobTracker/Prompt_DownloadOption.md`.
+- The confirmed prompt path is `chapter_05_JobTracker/3_Prompt_DownloadOption.md`.
 - **View User Guide** replaces the previously proposed download action.
 - The guide remains five pages to preserve the earlier four-to-five-page requirement.
 - The viewer provides no download capability in its UI.

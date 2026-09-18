@@ -6,7 +6,7 @@ Implement the approved dashboard as a senior React/TypeScript engineer and produ
 
 ## I — Instructions
 
-- Create `chapter_05_JobTracker/TabsPrompt.md` containing this approved RICEPOT plan.
+- Create `chapter_05_JobTracker/2_TabsPrompt.md` containing this approved RICEPOT plan.
 - Add **Dashboard** and **Job Tracker Board** tabs.
 - Open Dashboard by default without persisting the selected tab.
 - Keep the existing Kanban setup inside Job Tracker Board.
@@ -52,7 +52,7 @@ Implement the approved dashboard as a senior React/TypeScript engineer and produ
 
 ## O — Output
 
-- `chapter_05_JobTracker/TabsPrompt.md`
+- `chapter_05_JobTracker/2_TabsPrompt.md`
 - Accessible application tabs
 - Dashboard metrics and visualization
 - Offer and Rejected outcome columns
@@ -64,7 +64,7 @@ Implement the approved dashboard as a senior React/TypeScript engineer and produ
 
 ## T — Tasks
 
-1. Create `TabsPrompt.md` with the approved plan.
+1. Create `2_TabsPrompt.md` with the approved plan.
 2. Implement and test the dashboard aggregation utility.
 3. Build the seven metric cards.
 4. Build the SVG donut and proportional status bars.

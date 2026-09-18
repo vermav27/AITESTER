@@ -9,9 +9,22 @@ A simple local-first Job Application Tracker built as a single-page React applic
 
 Dashboard values are calculated from the same in-memory job collection loaded from IndexedDB. Switching views does not change saved data, and board search remains available when returning to the board during the same page session.
 
+## In-App User Guide
+
+Open **How to use tracker?** and choose **View User Guide** to read the bundled five-page guide without leaving the application. The PDF.js viewer provides Previous, Next, 75%-175% zoom, reset zoom, retry, and Back to Help controls. It also extracts each page's text for an assistive description.
+
+The viewer intentionally provides no download, print, open-in-new-tab, native browser toolbar, or raw-file-link controls. Because this is a static frontend and the PDF must be delivered to the browser for rendering, those interface restrictions discourage casual downloading but cannot make the document unrecoverable through browser developer tools, caches, or screenshots.
+
+## Project Documentation
+
+- [Architecture diagram](Architecture/Architecture.png) shows the application layers, Dashboard and board flow, IndexedDB persistence, backup path, and PDF.js viewer integration.
+- [Five-page user guide](Architecture/NextGenJobTracker_User_Guide.pdf) covers Dashboard metrics, the Kanban workflow, adding and finding jobs, the in-app guide viewer, themes, backup/restore, and browser-local storage.
+
+The PDF is bundled into the production build and displayed by the in-app viewer.
+
 ## Prerequisites
 
-- Node.js 20.x or newer
+- Node.js 20.16 or newer
 - npm 10.x or newer
 - A modern browser with IndexedDB enabled
 
@@ -40,7 +53,7 @@ npm run lint
 npm test
 ```
 
-The tests cover dashboard calculations and rendering, accessible tab behavior, required-field validation, safe URL handling, URL normalization, all supported platform mappings, lookalike-domain rejection, date behavior, automatic applied-date behavior, search, sorting, import validation, merge conflicts, and IndexedDB persistence with `fake-indexeddb`.
+The tests cover dashboard calculations and rendering, accessible tab behavior, Help-to-viewer transitions, PDF navigation and zoom boundaries, viewer recovery and focus behavior, required-field validation, safe URL handling, URL normalization, all supported platform mappings, lookalike-domain rejection, date behavior, automatic applied-date behavior, search, sorting, import validation, merge conflicts, and IndexedDB persistence with `fake-indexeddb`.
 
 ## Production Build
 
@@ -101,6 +114,8 @@ vercel --prod
 ```
 
 Do not deploy from this project without explicit authorization. The included `vercel.json` provides an SPA fallback so refreshed routes resolve to the app.
+
+For a Git-connected Vercel project whose Root Directory is `chapter_05_JobTracker/NextGenJobTracker`, the configured `ignoreCommand` compares only changes under that project root. Commits that change only files outside this folder skip the build; commits that change this app folder proceed with the automatic deployment. This behavior takes effect after the repository and production branch are connected in Vercel.
 
 ## Future Authentication Extension Points
 

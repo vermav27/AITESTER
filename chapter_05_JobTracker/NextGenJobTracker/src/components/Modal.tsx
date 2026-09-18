@@ -6,7 +6,8 @@ interface ModalProps {
   children: ReactNode;
   onClose: () => void;
   closeLabel?: string;
-  size?: 'sm' | 'md' | 'lg';
+  headerAction?: ReactNode;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
 const focusableSelector = [
@@ -18,7 +19,14 @@ const focusableSelector = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(',');
 
-export function Modal({ title, children, onClose, closeLabel = 'Close', size = 'md' }: ModalProps) {
+export function Modal({
+  title,
+  children,
+  onClose,
+  closeLabel = 'Close',
+  headerAction,
+  size = 'md',
+}: ModalProps) {
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<Element | null>(null);
@@ -71,7 +79,13 @@ export function Modal({ title, children, onClose, closeLabel = 'Close', size = '
   }, [onClose]);
 
   const sizeClass =
-    size === 'lg' ? 'max-w-3xl' : size === 'sm' ? 'max-w-md' : 'max-w-xl';
+    size === 'xl'
+      ? 'max-w-5xl'
+      : size === 'lg'
+        ? 'max-w-3xl'
+        : size === 'sm'
+          ? 'max-w-md'
+          : 'max-w-xl';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4">
@@ -82,14 +96,17 @@ export function Modal({ title, children, onClose, closeLabel = 'Close', size = '
         aria-labelledby={titleId}
         className={`max-h-[90vh] w-full ${sizeClass} overflow-hidden rounded-lg border border-slate-200 bg-white text-slate-950 shadow-soft dark:border-slate-700 dark:bg-slate-900 dark:text-slate-50`}
       >
-        <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-5 py-4 dark:border-slate-700">
-          <h2 id={titleId} className="text-lg font-semibold">
-            {title}
-          </h2>
+        <div className="flex items-start justify-between gap-3 border-b border-slate-200 px-5 py-4 dark:border-slate-700">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
+            <h2 id={titleId} className="text-lg font-semibold">
+              {title}
+            </h2>
+            {headerAction ? <div className="flex items-center">{headerAction}</div> : null}
+          </div>
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-300 text-slate-700 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-300 text-slate-700 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
             aria-label={closeLabel}
             title={closeLabel}
           >

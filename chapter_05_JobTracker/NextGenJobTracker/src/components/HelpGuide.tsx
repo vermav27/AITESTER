@@ -1,5 +1,7 @@
-import { Database, Download, ExternalLink, ListChecks, MoveRight, Plus } from 'lucide-react';
+import { BookOpen, Database, Download, ExternalLink, ListChecks, MoveRight, Plus } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { Modal } from './Modal';
+import { UserGuideViewer } from './UserGuideViewer';
 
 interface HelpGuideProps {
   onClose: () => void;
@@ -33,9 +35,44 @@ const guideItems = [
   },
 ];
 
+const userGuideUrl = new URL(
+  '../../Architecture/NextGenJobTracker_User_Guide.pdf',
+  import.meta.url,
+).href;
+
 export function HelpGuide({ onClose }: HelpGuideProps) {
+  const [view, setView] = useState<'help' | 'viewer'>('help');
+  const launcherRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    launcherRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  }, []);
+
+  const closeHelp = () => {
+    onClose();
+    window.requestAnimationFrame(() => launcherRef.current?.focus());
+  };
+
+  if (view === 'viewer') {
+    return <UserGuideViewer pdfUrl={userGuideUrl} onBack={() => setView('help')} />;
+  }
+
   return (
-    <Modal title="How to use this tracker" onClose={onClose} size="lg">
+    <Modal
+      title="How to use this tracker"
+      onClose={closeHelp}
+      size="lg"
+      headerAction={
+        <button
+          type="button"
+          className="btn-secondary h-9 px-3"
+          onClick={() => setView('viewer')}
+        >
+          <BookOpen className="h-4 w-4" aria-hidden="true" />
+          View User Guide
+        </button>
+      }
+    >
       <div className="grid gap-3 sm:grid-cols-2">
         {guideItems.map((item) => (
           <div
@@ -65,7 +102,7 @@ export function HelpGuide({ onClose }: HelpGuideProps) {
       </section>
 
       <div className="mt-5 flex justify-end">
-        <button type="button" className="btn-primary" onClick={onClose}>
+        <button type="button" className="btn-primary" onClick={closeHelp}>
           Close
         </button>
       </div>

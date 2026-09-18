@@ -637,3 +637,71 @@
 
 ### Session status
 - Complete
+
+## 2026-09-18T05:37:26Z - Session 13
+
+### Goals
+- Add an in-app, view-only PDF.js user-guide experience from the Help dialog.
+- Update the architecture image and five-page user guide to document the Dashboard and viewer.
+
+### Requirements and decisions
+- The Help dialog will transition to a larger viewer dialog rather than stacking dialogs.
+- The viewer will expose navigation, bounded zoom, loading, retry and Back to Help controls, but no download, print, open-in-new-tab or direct-link controls.
+- The bundled guide remains browser-accessible by necessity; the interface discourages casual downloading but cannot provide absolute content protection in a static frontend.
+
+### Work completed
+- Saved the approved RICEPOT plan in `chapter_05_JobTracker/Prompt_DownloadOption.md`.
+- Added a backward-compatible Modal header action and `xl` size.
+- Added an in-app PDF.js viewer with lazy loading, a Vite worker asset, high-DPI canvas rendering, accessible extracted page text, bounded zoom, navigation, retry and stale-task cleanup.
+- Added a non-stacked Help-to-viewer transition and final focus restoration to the Help launcher.
+- Added focused tests for viewer controls, boundaries, error recovery, accessibility, focus and the absence of file-action controls.
+- Updated the architecture diagram with Dashboard, viewer, PDF.js and bundled-guide flows.
+- Regenerated the five-page user guide with fresh generic-data screenshots and the Help/viewer workflow.
+- Updated the README with viewer usage, coverage and the static-frontend content-protection limitation.
+
+### Files changed
+- Added: `../Prompt_DownloadOption.md`
+- Added: `src/components/UserGuideViewer.tsx`
+- Added: `src/vite-env.d.ts`
+- Added: `tests/helpGuideViewer.test.tsx`
+- Modified: `src/components/HelpGuide.tsx`
+- Modified: `src/components/Modal.tsx`
+- Modified: `package.json`
+- Modified: `package-lock.json`
+- Modified: `Architecture/Architecture.png`
+- Modified: `Architecture/NextGenJobTracker_User_Guide.pdf`
+- Modified: `README.md`
+- Modified: `docs/SESSION_LOG.md`
+
+### Dependencies
+- Added: `pdfjs-dist` 5.4.624 as an exact production dependency.
+- Removed: none.
+
+### Database or schema changes
+- None.
+
+### Verification
+- `npm run lint` passed.
+- `npm test` passed: 10 files and 44 tests.
+- `npm run build` passed and emitted the updated five-page PDF, PDF.js worker and lazy PDF.js JavaScript chunk.
+- Headed Chromium checks passed at desktop and tablet widths in Light, Dark and System-dark modes with zero console errors and no horizontal page overflow.
+- Verified all five pages, 75%-175% zoom boundaries, Back/Escape behavior, final focus restoration, one active dialog and nonblank canvas pixels.
+- Verified the viewer renders no download, print, open-in-new-tab, raw-link, iframe or object controls.
+- Confirmed the final PDF is exactly five A4 pages; all source page layouts reported zero overflow and every rendered page was visually inspected.
+- Confirmed the architecture image is 1672x941 and `Architecture` contains exactly one PNG and one PDF.
+
+### Problems and resolutions
+- Eager rejected promises in PDF.js mocks produced unhandled-test warnings; created failures at mocked API call time so component handlers attach synchronously.
+- A sample screenshot fixture used an invalid Follow-up ID; corrected it to `follow-up` and recaptured all screenshots.
+- The original guide template cropped wide screenshots; matched the first three image frames to the source aspect ratio and revalidated all pages.
+- Browser verification found a transient page-label/render-readiness mismatch; tied `aria-busy` to page, zoom and container width so ready state always represents the current canvas and description.
+
+### Known limitations
+- A browser-delivered PDF cannot be made absolutely unrecoverable; users can still inspect network/cache data or capture the screen even though the interface exposes no file controls.
+- Zoom above the fit-to-width level uses scrolling contained inside the viewer.
+
+### Next recommended task
+- Push or deploy the verified commit only after separate authorization.
+
+### Session status
+- Complete

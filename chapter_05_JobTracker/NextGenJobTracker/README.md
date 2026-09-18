@@ -9,9 +9,15 @@ A simple local-first Job Application Tracker built as a single-page React applic
 
 Dashboard values are calculated from the same in-memory job collection loaded from IndexedDB. Switching views does not change saved data, and board search remains available when returning to the board during the same page session.
 
+## In-App User Guide
+
+Open **How to use tracker?** and choose **View User Guide** to read the bundled five-page guide without leaving the application. The PDF.js viewer provides Previous, Next, 75%-175% zoom, reset zoom, retry, and Back to Help controls. It also extracts each page's text for an assistive description.
+
+The viewer intentionally provides no download, print, open-in-new-tab, native browser toolbar, or raw-file-link controls. Because this is a static frontend and the PDF must be delivered to the browser for rendering, those interface restrictions discourage casual downloading but cannot make the document unrecoverable through browser developer tools, caches, or screenshots.
+
 ## Prerequisites
 
-- Node.js 20.x or newer
+- Node.js 20.16 or newer
 - npm 10.x or newer
 - A modern browser with IndexedDB enabled
 
@@ -40,7 +46,7 @@ npm run lint
 npm test
 ```
 
-The tests cover dashboard calculations and rendering, accessible tab behavior, required-field validation, safe URL handling, URL normalization, all supported platform mappings, lookalike-domain rejection, date behavior, automatic applied-date behavior, search, sorting, import validation, merge conflicts, and IndexedDB persistence with `fake-indexeddb`.
+The tests cover dashboard calculations and rendering, accessible tab behavior, Help-to-viewer transitions, PDF navigation and zoom boundaries, viewer recovery and focus behavior, required-field validation, safe URL handling, URL normalization, all supported platform mappings, lookalike-domain rejection, date behavior, automatic applied-date behavior, search, sorting, import validation, merge conflicts, and IndexedDB persistence with `fake-indexeddb`.
 
 ## Production Build
 

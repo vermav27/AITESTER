@@ -1,5 +1,5 @@
 ---
-name: Skill_LinkedInMedium_PostCreator
+name: skill-linkedinmedium-postcreator
 description: >-
   Turns a title, rough bullet points, notes, or an image reference into a complete, ready-to-post content pack in Vineet Verma's QA brand voice: 3 controversial hooks, a LinkedIn post (Hook, Story, Offer), an X/Twitter-style tweet-card image prompt for LinkedIn using his headshot, a full Medium article, and a cyberpunk Medium header image prompt. Use this skill whenever Vineet shares a post idea, topic, title, bullet list, screenshot or reference image and wants content, even if he only says "make a post on this", "write content", "here is my next idea", "LinkedIn and Medium", or "give me hooks", or pastes a topic about QA, software testing, manual testing, test automation, Playwright, Salesforce, CI/CD, AI in testing or QA careers. Also use it to redo or regenerate any single piece of a pack (just the hooks, just the post, just one image prompt).
 ---

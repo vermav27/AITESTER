@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Test Plan Agent{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="{{ url_for('main.index') }}">
+        <span class="brand-mark">TP</span>
+        <span class="brand-text">
+          <strong>Test Plan Agent</strong>
+          <small>Jira → local LLM → review-ready plan</small>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Main">
+        <a class="nav-link {{ 'is-active' if request.endpoint == 'main.index' else '' }}"
+           href="{{ url_for('main.index') }}">Generate</a>
+        <a class="nav-link {{ 'is-active' if request.endpoint and request.endpoint.startswith('settings.') else '' }}"
+           href="{{ url_for('settings.page') }}">Settings</a>
+      </nav>
+
+      {% if state is defined %}
+      <div class="status-pills">
+        <span class="pill {{ 'pill-ok' if state.jira_configured else 'pill-off' }}">
+          <span class="dot"></span>Jira
+        </span>
+        <span class="pill {{ 'pill-ok' if state.ollama_configured else 'pill-off' }}">
+          <span class="dot"></span>Ollama
+        </span>
+      </div>
+      {% endif %}
+    </div>
+  </header>
+
+  <main class="wrap">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flashes">
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <span>Test Plan Agent v{{ app_version }} — local-first. Reads Jira, drafts with Ollama, always stops for human review.</span>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

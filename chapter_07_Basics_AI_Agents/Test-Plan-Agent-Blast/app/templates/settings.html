@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Settings — Test Plan Agent{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>Settings</h1>
+  <p>
+    Values are stored in the gitignored <code>.env</code> file at the project root.
+    Secrets are never printed back to this page, never logged, and never included in a generated plan.
+  </p>
+</section>
+
+<form method="post" action="{{ url_for('settings.save') }}" id="settings-form">
+  <section class="card">
+    <div class="card-head">
+      <h2>Jira</h2>
+      <span class="pill {{ 'pill-ok' if state.jira_configured else 'pill-off' }}"><span class="dot"></span>
+        {{ 'Configured' if state.jira_configured else 'Not configured' }}
+      </span>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label for="JIRA_BASE_URL">Jira Base URL</label>
+        <input id="JIRA_BASE_URL" name="JIRA_BASE_URL" type="text"
+               value="{{ config.JIRA_BASE_URL }}" placeholder="https://your-domain.atlassian.net" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="JIRA_EMAIL">Email ID</label>
+        <input id="JIRA_EMAIL" name="JIRA_EMAIL" type="email"
+               value="{{ config.JIRA_EMAIL }}" placeholder="you@example.com" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="JIRA_TOKEN">API token</label>
+        <input id="JIRA_TOKEN" name="JIRA_TOKEN" type="password" value=""
+               placeholder="{{ masked_token or 'Paste your Atlassian API token' }}" autocomplete="new-password">
+        <span class="field-hint">
+          {% if masked_token %}Saved: <code>{{ masked_token }}</code> — leave blank to keep it.{% else %}No token saved yet.{% endif %}
+        </span>
+      </div>
+      <div class="field">
+        <label for="JIRA_AC_FIELD_ID">Acceptance-criteria field <span class="optional">optional</span></label>
+        <input id="JIRA_AC_FIELD_ID" name="JIRA_AC_FIELD_ID" type="text"
+               value="{{ config.JIRA_AC_FIELD_ID }}" placeholder="customfield_10001" autocomplete="off">
+        <span class="field-hint">Leave blank to read acceptance criteria from the description and comments.</span>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-outline" data-test-url="{{ url_for('settings.test_jira') }}"
+              data-test-target="jira-result">Test Jira connection</button>
+      <span class="test-result" id="jira-result"></span>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Ollama (local LLM)</h2>
+      <span class="pill {{ 'pill-ok' if state.ollama_configured else 'pill-off' }}"><span class="dot"></span>
+        {{ 'Configured' if state.ollama_configured else 'Not configured' }}
+      </span>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label for="OLLAMA_BASE_URL">Ollama Base URL</label>
+        <input id="OLLAMA_BASE_URL" name="OLLAMA_BASE_URL" type="text"
+               value="{{ config.OLLAMA_BASE_URL }}" placeholder="http://localhost:11434" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="OLLAMA_MODEL">Model</label>
+        <input id="OLLAMA_MODEL" name="OLLAMA_MODEL" type="text" list="ollama-models"
+               value="{{ config.OLLAMA_MODEL }}" placeholder="gemma3:4b" autocomplete="off">
+        <datalist id="ollama-models">
+          {% for model in installed_models %}<option value="{{ model }}"></option>{% endfor %}
+        </datalist>
+        <span class="field-hint">
+          {% if installed_models %}
+            Installed locally: <code>{{ installed_models | join(', ') }}</code>
+          {% else %}
+            Ollama is unreachable right now — start it with <code>ollama serve</code>.
+          {% endif %}
+        </span>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-outline" data-test-url="{{ url_for('settings.test_ollama') }}"
+              data-test-target="ollama-result">Test Ollama connection</button>
+      <span class="test-result" id="ollama-result"></span>
+    </div>
+  </section>
+
+  <div class="form-actions sticky-actions">
+    <button type="submit" class="btn btn-primary">Save configuration</button>
+    <span class="hint">Writes to <code>.env</code> — blank secret fields keep the existing value.</span>
+  </div>
+</form>
+
+<section class="card">
+  <h3 class="section-title flush">Security notes</h3>
+  <ul class="notes">
+    <li>Credentials live only in the gitignored <code>.env</code> file — never in code, logs, or a generated plan.</li>
+    <li>The agent is read-only against Jira: it never transitions, comments on, or edits a ticket.</li>
+    <li>Generated plans redact reporter/author details and never contain tokens.</li>
+    <li>Rotate the API token at Atlassian if it is ever exposed or pasted somewhere unsafe.</li>
+  </ul>
+</section>
+{% endblock %}

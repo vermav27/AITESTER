@@ -1,6 +1,6 @@
 # AITESTER
 
-AI Engineering resources for Software QA / SDET work. This repository combines LLM basics, prompt engineering templates, a Playwright automation framework example, a local AI application that generates test cases from Jira tickets, a resume-tailoring skill, a React job-application tracker, and agent skills for drafting review-ready test plans and for turning an idea into LinkedIn and Medium content.
+AI Engineering resources for Software QA / SDET work. This repository combines LLM basics, prompt engineering templates, a Playwright automation framework example, a local AI application that generates test cases from Jira tickets, a resume-tailoring skill, a React job-application tracker, a Flask agent that turns a Jira ticket into a review-ready test plan, and agent skills for drafting review-ready test plans and for turning an idea into LinkedIn and Medium content.
 
 > This README is the top-level map of the repository. Individual projects, such as the Playwright framework and the Jira generator, also include their own README files with deeper setup and usage details.
 
@@ -16,6 +16,7 @@ AI Engineering resources for Software QA / SDET work. This repository combines L
 | `chapter_04_JobKit/` | Resume-tailoring skill that turns one base resume plus a sheet of job descriptions into tailored, ATS-friendly versions. |
 | `chapter_05_JobTracker/` | NextGen Job Tracker: a local-first React + TypeScript single-page app with a Kanban board, dashboard metrics, and an in-app user guide viewer. |
 | `chapter_06_Branding_LinkedIn_Medium/` | LinkedIn and Medium content skill, plus the generated content packs in `Output/`. |
+| `chapter_07_Basics_AI_Agents/` | B.L.A.S.T. agent build: a Flask app that turns a Jira ticket into a review-ready test plan using local Ollama. |
 | `.agents/skills/testplan-create/` | Codex skill for fetching Jira tickets, analyzing requirement gaps, and drafting test plans. |
 | `.agents/output/` | Generated local artifacts such as Markdown/PDF test plans and reviewed design attachments. |
 | `PromptQuickReference.md` | Quick decision guide for selecting the right prompt template. |
@@ -133,27 +134,61 @@ AITester/
 │       └── Architecture/
 │           ├── Architecture.png
 │           └── NextGenJobTracker_User_Guide.pdf
-└── chapter_06_Branding_LinkedIn_Medium/
-    ├── Skill_LinkedInMedium_PostCreator/
-    │   ├── SKILL.md
-    │   ├── references/
-    │   │   ├── brand-voice.md
-    │   │   ├── example-pack.md
-    │   │   ├── hooks.md
-    │   │   ├── image-prompts.md
-    │   │   ├── linkedin-post.md
-    │   │   ├── medium-article.md
-    │   │   └── ImageReference/
-    │   │       └── Reference.png
-    │   └── scripts/
-    │       └── lint_content.py
-    └── Output/
+├── chapter_06_Branding_LinkedIn_Medium/
+│   ├── Skill_LinkedInMedium_PostCreator/
+│   │   ├── SKILL.md
+│   │   ├── references/
+│   │   │   ├── brand-voice.md
+│   │   │   ├── example-pack.md
+│   │   │   ├── hooks.md
+│   │   │   ├── image-prompts.md
+│   │   │   ├── linkedin-post.md
+│   │   │   ├── medium-article.md
+│   │   │   └── ImageReference/
+│   │   │       └── Reference.png
+│   │   └── scripts/
+│   │       └── lint_content.py
+│   └── Output/
+│       ├── README.md
+│       ├── 01-hooks.md
+│       ├── 02-linkedin-post.md
+│       ├── 03-linkedin-card-prompt.md
+│       ├── 04-medium-article.md
+│       └── 05-medium-header-prompt.md
+└── chapter_07_Basics_AI_Agents/
+    └── Test-Plan-Agent-Blast/
         ├── README.md
-        ├── 01-hooks.md
-        ├── 02-linkedin-post.md
-        ├── 03-linkedin-card-prompt.md
-        ├── 04-medium-article.md
-        └── 05-medium-header-prompt.md
+        ├── BLAST.md                  # governing protocol
+        ├── PromptUsed.md
+        ├── task_plan.md              # phases, goals, checklists
+        ├── findings.md               # Jira research, endpoints, defects found
+        ├── progress.md               # append-only run log
+        ├── llm.md                    # constitution: schemas, rules, invariants
+        ├── run.py                    # Flask entry point
+        ├── requirements.txt
+        ├── .env.example
+        ├── app/                      # Flask presentation layer
+        │   ├── __init__.py           # create_app() factory + markdown filter
+        │   ├── routes/               # main + settings blueprints
+        │   ├── templates/            # base, index, settings
+        │   └── static/               # css, js
+        ├── core/                     # deterministic engine + agent
+        │   ├── config_manager.py
+        │   ├── jira_client.py
+        │   ├── normalize.py
+        │   ├── checklist.py
+        │   ├── ollama_client.py
+        │   ├── render.py
+        │   ├── agent.py
+        │   └── navigation.py
+        ├── tools/                    # L3 CLIs (fetch, normalize, gaps, render, run)
+        ├── architecture/             # Layer-1 SOPs
+        ├── prompts/
+        │   └── test_plan_prompt.md
+        ├── templates/
+        │   ├── Test_Plan_Template.md
+        │   └── requirement-checklist.md
+        └── runs/                     # generated plans (.md + .json)
 ```
 
 ---
@@ -343,6 +378,103 @@ python3 scripts/lint_content.py card ../Output/03-linkedin-card-prompt.md
 
 ---
 
+## Chapter 7 - Basics of AI Agents (B.L.A.S.T. Test Plan Agent)
+
+Chapter 7 is the agent-building chapter: **Test Plan Agent**, a Flask application that turns a Jira
+ticket into a review-ready test plan using a locally installed Ollama model. It is built on the
+B.L.A.S.T. protocol (`Blueprint → Link → Architect → Stylize → Trigger`) and the three-layer
+A.N.T. architecture (`Agent` / `Navigation` / `Tools`).
+
+Where Chapter 3 *generates test cases*, Chapter 7 *plans the testing* — and stops at a human review
+gate instead of declaring itself finished.
+
+### What It Does
+
+You type a plain-English request such as:
+
+```text
+Fetch this Jira and create a test plan for KAN-1
+Create a test plan for the latest ticket in KAN
+```
+
+The agent then:
+
+1. Resolves the target ticket (explicit key, or the newest ticket in a named project).
+2. Fetches the issue and its comments over the Jira REST API **v3** (read-only).
+3. Flattens Atlassian Document Format and locates acceptance criteria, recording which source each
+   one came from (custom field → description → comment).
+4. Runs a deterministic requirement checklist and produces a **Gaps & Questions** list.
+5. Drafts the full plan with the local Ollama model.
+6. Renders the canonical template, appends the authoritative gaps table and a Human Review Gate,
+   writes the artifacts, and **stops** — the status is always `draft`.
+
+### Key Features
+
+- **Two-page Flask UI** — a Generate page and a Settings page, with a pipeline trace and stats.
+- **Settings page** — Jira Base URL / Email / token and Ollama URL / model, with one-click
+  **Test Jira Connection** and **Test Ollama Connection** buttons.
+- **Secrets stay secret** — values live in a gitignored `.env`, are masked in the UI, and never
+  appear in a log line or a generated plan.
+- **Local-first LLM** — Ollama only; nothing is sent to a cloud model.
+- **Deterministic where it matters** — fetching, normalizing, gap analysis, the gaps table, and the
+  review gate are computed by code, not by the model.
+- **CLI tools** — the same engine is drivable without a browser via `tools/`.
+- **Project memory** — `task_plan.md`, `findings.md`, `progress.md`, and `llm.md` hold the phases,
+  research, append-only run log, and the frozen schemas/rules/invariants.
+
+### Test Plan Agent Quick Start
+
+```bash
+cd chapter_07_Basics_AI_Agents/Test-Plan-Agent-Blast
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env       # then fill in your Jira and Ollama values
+python run.py
+```
+
+Open **http://127.0.0.1:5000**.
+
+Verify both services before generating:
+
+```bash
+python tools/verify_connections.py
+```
+
+```text
+  ✓ jira    Connected to Jira as <you>.
+  ✓ ollama  Ollama is running with model 'gemma3:4b'.
+
+Link verified — both services are reachable.
+```
+
+Run the pipeline without the browser:
+
+```bash
+python tools/analyze_gaps.py KAN-1                              # gap analysis only, no LLM
+python tools/run_agent.py "create a test plan for KAN-1"        # whole pipeline
+```
+
+Generated plans are written to `runs/` as `<KEY>-test-plan-<timestamp>.md` plus a matching `.json`,
+and are downloadable from the UI.
+
+### Configuration Variables
+
+| Variable | Description |
+|---|---|
+| `JIRA_BASE_URL` | Jira site URL, for example `https://your-domain.atlassian.net`. |
+| `JIRA_EMAIL` | Jira account email. Leave blank to send the token as a Bearer PAT instead. |
+| `JIRA_TOKEN` | Jira API token. Do not use your Jira password. |
+| `JIRA_AC_FIELD_ID` | Optional custom field holding acceptance criteria, e.g. `customfield_10001`. |
+| `OLLAMA_BASE_URL` | Local Ollama API URL, usually `http://localhost:11434`. |
+| `OLLAMA_MODEL` | Installed Ollama model tag, currently `gemma3:4b`. |
+| `APP_HOST` / `APP_PORT` | Optional Flask bind override, default `127.0.0.1:5000`. |
+
+For the full application README — architecture diagram, folder structure, CLI reference,
+troubleshooting, and the security notes — see [`chapter_07_Basics_AI_Agents/Test-Plan-Agent-Blast/README.md`](./chapter_07_Basics_AI_Agents/Test-Plan-Agent-Blast/README.md).
+
+---
+
 ## Codex Agent Skill - Test Plan Creator
 
 The `.agents/skills/testplan-create/` skill turns a Jira ticket into a human-review-ready test plan. It is designed for QA/test planning work such as:
@@ -426,7 +558,10 @@ The generated test plan should always include gaps/questions, assumptions, risks
 - Keep real credentials in a local `.env` file only.
 - Treat `.env.example` as a placeholder template; it should not contain real secrets.
 - Keep `.agents/skills/testplan-create/.env` private and do not commit it.
-- Review generated files in `.agents/output/` before sharing or committing them, because Jira tickets and attachments may contain private product details.
+- Keep `chapter_07_Basics_AI_Agents/Test-Plan-Agent-Blast/.env` private and do not commit it; the file is gitignored.
+- The Chapter 7 app binds to `127.0.0.1` and has no authentication of its own. Do not expose it publicly.
+- The agent is read-only against Jira: it never transitions, comments on, or edits a ticket.
+- Review generated files in `.agents/output/` and `chapter_07_Basics_AI_Agents/Test-Plan-Agent-Blast/runs/` before sharing or committing them, because Jira tickets and attachments may contain private product details.
 - Rotate any token that has ever been committed, shared, pasted into an AI chat, or exposed in logs.
 - Generated artifacts and dependency folders should remain uncommitted.
 
@@ -443,3 +578,4 @@ The generated test plan should always include gaps/questions, assumptions, risks
 7. Use `chapter_04_JobKit/Skill_ResumeCreator/resume-tailor/SKILL.md` to tailor a resume per job description, then review the copies in `Tailored Resumes/`.
 8. Run `chapter_05_JobTracker/NextGenJobTracker` to track applications end to end, and read its user guide from inside the app.
 9. Use the Chapter 6 content skill to turn an idea into a LinkedIn and Medium pack, then lint it before publishing.
+10. Read `chapter_07_Basics_AI_Agents/Test-Plan-Agent-Blast/BLAST.md` and `llm.md` to see how an agent project is specified, then run the Chapter 7 Test Plan Agent to draft a plan for a real ticket.

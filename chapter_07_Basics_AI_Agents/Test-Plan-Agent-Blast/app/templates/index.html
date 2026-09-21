@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block title %}Generate — Test Plan Agent{% endblock %}
+
+{% macro steps_trace(steps) %}
+  {% if steps %}
+  <ol class="steps">
+    {% for step in steps %}
+    <li class="step step-{{ step.status }}">
+      <span class="step-icon" aria-hidden="true"></span>
+      <div class="step-body">
+        <strong>{{ step.name }}</strong>
+        {% if step.detail %}<span class="step-detail">{{ step.detail }}</span>{% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
+  {% endif %}
+{% endmacro %}
+
+{% block content %}
+<section class="hero">
+  <h1>Turn a Jira ticket into a test plan</h1>
+  <p>
+    Type a request in plain English. The agent fetches the ticket over the Jira REST API,
+    scores it against the requirement checklist, drafts a plan with your local Ollama model,
+    and stops at a human review gate. Nothing is sent to a cloud LLM.
+  </p>
+</section>
+
+{% if not (state.jira_configured and state.ollama_configured) %}
+<div class="notice notice-warning">
+  <strong>Finish setup first</strong>
+  <ul>
+    {% if not state.jira_configured %}<li>Jira needs a Base URL, Email and API token.</li>{% endif %}
+    {% if not state.ollama_configured %}<li>Ollama needs a base URL.</li>{% endif %}
+  </ul>
+  <a class="btn btn-outline" href="{{ url_for('settings.page') }}">Open Settings</a>
+</div>
+{% endif %}
+
+<form class="card" method="post" action="{{ url_for('main.generate') }}" id="generate-form">
+  <label class="field-label" for="prompt">Your request</label>
+  <textarea id="prompt" name="prompt" rows="3"
+            placeholder="e.g. Fetch this Jira and create a test plan for KAN-1">{{ prompt }}</textarea>
+
+  <div class="examples">
+    <span class="examples-label">Try</span>
+    {% for example in examples %}
+      <button type="button" class="chip" data-example="{{ example }}">{{ example }}</button>
+    {% endfor %}
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary" id="submit-btn">Generate test plan</button>
+    <span class="hint" id="submit-hint">Runs entirely on this machine — a local model can take a while on a large ticket.</span>
+  </div>
+</form>
+
+{% if error %}
+<div class="notice notice-error">
+  <strong>
+    {% if failed_step %}Generation stopped at “{{ failed_step }}”{% else %}Generation failed{% endif %}
+  </strong>
+  <p class="notice-body">{{ error }}</p>
+  {{ steps_trace(steps) }}
+  {% if failed_step == 'config' %}
+  <a class="btn btn-outline" href="{{ url_for('settings.page') }}">Open Settings</a>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if result %}
+<section class="card result">
+  <div class="result-head">
+    <div>
+      <h2>{{ result.key }} — {{ result.title }}</h2>
+      <p class="subtle">
+        Drafted with <code>{{ result.model }}</code> in {{ result.duration_seconds }}s.
+        {{ result.artifacts.markdown_name }}
+      </p>
+    </div>
+    <span class="badge badge-draft">DRAFT — needs review</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><span class="stat-value">{{ result.acceptance_criteria_count }}</span><span class="stat-label">Acceptance criteria</span></div>
+    <div class="stat"><span class="stat-value">{{ result.scenario_count }}</span><span class="stat-label">Scenarios drafted</span></div>
+    <div class="stat"><span class="stat-value">{{ result.gap_count }}</span><span class="stat-label">Open questions</span></div>
+    <div class="stat"><span class="stat-value">{{ result.ticket.comments | length }}</span><span class="stat-label">Comments scanned</span></div>
+  </div>
+
+  <div class="form-actions">
+    <a class="btn btn-primary" href="{{ url_for('main.download_run', filename=result.artifacts.markdown_name) }}">Download Markdown</a>
+    <a class="btn btn-outline" href="{{ url_for('main.download_run', filename=result.artifacts.json_name) }}">Download JSON</a>
+    <button type="button" class="btn btn-ghost" data-copy="{{ url_for('main.download_run', filename=result.artifacts.markdown_name) }}">Copy plan</button>
+  </div>
+
+  <h3 class="section-title">Pipeline</h3>
+  {{ steps_trace(result.steps) }}
+
+  <h3 class="section-title">Gaps &amp; questions for the author ({{ result.gap_count }})</h3>
+  {% if result.gaps %}
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr><th>id</th><th>Category</th><th>Status</th><th>Checklist item</th><th>Question</th></tr>
+      </thead>
+      <tbody>
+        {% for gap in result.gaps %}
+        <tr>
+          <td class="mono">{{ gap.id }}</td>
+          <td>{{ gap.category }}</td>
+          <td><span class="tag tag-{{ gap.status }}">{{ gap.status }}</span></td>
+          <td>{{ gap.checklist_item }}</td>
+          <td>{{ gap.question }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="subtle">No gaps detected — every checklist item has evidence in the ticket.</p>
+  {% endif %}
+
+  <details class="plan-details" open>
+    <summary>Rendered test plan</summary>
+    <div class="plan-body">{{ result.plan_markdown | markdown | safe }}</div>
+  </details>
+
+  <div class="gate">
+    <strong>Human review gate</strong>
+    <p>{{ result.review_gate.summary }}</p>
+    <p class="subtle">This plan is not final. Review it, answer the open questions, then approve it before execution.</p>
+  </div>
+</section>
+{% endif %}
+
+{% if recent_runs %}
+<section class="card">
+  <h3 class="section-title flush">Recent plans</h3>
+  <ul class="run-list">
+    {% for run in recent_runs %}
+    <li>
+      <a class="mono" href="{{ url_for('main.download_run', filename=run.name) }}">{{ run.name }}</a>
+      <span class="subtle">{{ run.key }} · {{ run.size_kb }} KB · {{ run.modified }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

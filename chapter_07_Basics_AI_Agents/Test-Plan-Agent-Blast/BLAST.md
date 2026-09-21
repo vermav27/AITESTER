@@ -35,6 +35,7 @@ You are strictly forbidden from writing scripts in `tools/` until:
 
 **2. Data-First Rule:** You must define the **JSON Data Schema** (Input/Output shapes) in `llm.md`. Coding only begins once the "Payload" shape is confirmed.
 
+
 **3. Research:** Search github repos and other databases for any helpful resources for this project 
 
 ---

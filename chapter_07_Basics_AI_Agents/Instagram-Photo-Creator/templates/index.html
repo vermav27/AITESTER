@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Studio · Instagram Photo Creator{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>One photo in. <em>Four</em> reel-ready shots out.</h1>
+  <p class="lede">
+    Upload your raw product photo. We isolate the product, paste its <strong>original pixels</strong>
+    onto four aesthetic 9:16 backdrops, stamp your handle, and hand you 4K files — colour and
+    identity untouched.
+  </p>
+</section>
+
+<div class="panel-grid">
+  <section class="panel">
+    <h2>1 · Upload</h2>
+    <form id="upload-form" autocomplete="off">
+      <label id="drop" class="drop" for="image">
+        <input type="file" id="image" name="image" accept=".jpg,.jpeg,.png,.webp" hidden />
+        <span class="drop-icon">⌾</span>
+        <strong id="drop-label">Drop a photo here or click to browse</strong>
+        <small>JPG · PNG · WEBP — long edge ≥ 1000px, max 15 MB</small>
+      </label>
+      <img id="preview" class="preview" alt="" hidden />
+
+      <div class="row">
+        <div class="field">
+          <label for="product_name">Product name <span class="opt">(optional)</span></label>
+          <input type="text" id="product_name" name="product_name" placeholder="Macramé rainbow wall hanging" />
+        </div>
+        <div class="field">
+          <label for="product_category">Category</label>
+          <select id="product_category" name="product_category">
+            <option value="other">Other</option>
+            <option value="home_decor">Home decor</option>
+            <option value="handmade_craft">Handmade craft</option>
+            <option value="bottle">Bottle</option>
+            <option value="garment">Garment</option>
+            <option value="jewelry">Jewelry</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="btn primary" id="go">Create 4 photos</button>
+      <p class="hint" id="form-error" hidden></p>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2>2 · The four scenes</h2>
+    <div class="scene-list">
+      {% for s in scenes %}
+      <article class="scene" style="--accent: {{ s.accent }}">
+        <span class="scene-dot"></span>
+        <div>
+          <strong>{{ loop.index }}. {{ s.name }}</strong>
+          <small>{{ s.blurb }}</small>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="meta-line">
+      Backgrounds: <strong>{{ background_provider }}</strong> ·
+      Canvas: <strong>{{ canvas.width }}×{{ canvas.height }}</strong> ·
+      Watermark: <strong>{{ brand.handle }}</strong>
+    </p>
+  </section>
+</div>
+
+<section class="panel progress-panel" id="progress-panel" hidden>
+  <h2>3 · Working</h2>
+  <div class="bar"><div class="bar-fill" id="bar-fill"></div></div>
+  <p class="stage-line"><span id="stage-name">queued</span> · <span id="stage-msg">Queued</span></p>
+  <ol class="stages" id="stages">
+    <li data-stage="ingest">Validate &amp; normalize</li>
+    <li data-stage="segment">Isolate product (alpha matte)</li>
+    <li data-stage="generate">Generate 4 backdrops</li>
+    <li data-stage="composite">Composite original pixels</li>
+    <li data-stage="canvas">Enforce 9:16 4K canvas</li>
+    <li data-stage="verify">Fidelity gate (ΔE / SSIM)</li>
+    <li data-stage="export">Write files + ZIP</li>
+  </ol>
+</section>
+
+<section class="panel results-panel" id="results-panel" hidden>
+  <div class="results-head">
+    <h2>4 · Your photos</h2>
+    <div class="actions">
+      <button class="btn" id="recreate">↻ Recreate</button>
+      <a class="btn primary" id="download-all" href="#">↓ Download all (ZIP)</a>
+    </div>
+  </div>
+  <p class="meta-line" id="results-meta"></p>
+  <div class="grid" id="grid"></div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>window.SCENES = {{ scenes | tojson }};</script>
+{% endblock %}

@@ -1,6 +1,6 @@
 # AITESTER
 
-AI Engineering resources for Software QA / SDET work. This repository combines LLM basics, prompt engineering templates, a Playwright automation framework example, a local AI application that generates test cases from Jira tickets, a resume-tailoring skill, a React job-application tracker, a Flask agent that turns a Jira ticket into a review-ready test plan, and agent skills for drafting review-ready test plans and for turning an idea into LinkedIn and Medium content.
+AI Engineering resources for Software QA / SDET work. This repository combines LLM basics, prompt engineering templates, a Playwright automation framework example, a local AI application that generates test cases from Jira tickets, a resume-tailoring skill, a React job-application tracker, a Flask agent that turns a Jira ticket into a review-ready test plan, n8n Jira agent workflows, and agent skills for drafting review-ready test plans and for turning an idea into LinkedIn and Medium content.
 
 > This README is the top-level map of the repository. Individual projects, such as the Playwright framework and the Jira generator, also include their own README files with deeper setup and usage details.
 
@@ -17,6 +17,7 @@ AI Engineering resources for Software QA / SDET work. This repository combines L
 | `chapter_05_JobTracker/` | NextGen Job Tracker: a local-first React + TypeScript single-page app with a Kanban board, dashboard metrics, and an in-app user guide viewer. |
 | `chapter_06_Branding_LinkedIn_Medium/` | LinkedIn and Medium content skill, plus the generated content packs in `Output/`. |
 | `chapter_07_Basics_AI_Agents/` | B.L.A.S.T. agent build: a Flask app that turns a Jira ticket into a review-ready test plan using local Ollama. |
+| `chapter_08_n8n_Agents/` | Importable n8n workflows for chat-based Jira issue lookup and Jira subtask creation. |
 | `.agents/skills/testplan-create/` | Codex skill for fetching Jira tickets, analyzing requirement gaps, and drafting test plans. |
 | `.agents/output/` | Generated local artifacts such as Markdown/PDF test plans and reviewed design attachments. |
 | `PromptQuickReference.md` | Quick decision guide for selecting the right prompt template. |
@@ -39,7 +40,6 @@ AITester/
 │           ├── SKILL.md
 │           ├── .env          # local only; do not commit real secrets
 │           ├── assets/
-│           │   ├── logo.png
 │           │   └── vwo_details.md
 │           ├── references/
 │           │   ├── requirement-checklist.md
@@ -135,7 +135,7 @@ AITester/
 │           ├── Architecture.png
 │           └── NextGenJobTracker_User_Guide.pdf
 ├── chapter_06_Branding_LinkedIn_Medium/
-│   ├── Skill_LinkedInMedium_PostCreator/
+│   ├── skill-linkedinmedium-postcreator/
 │   │   ├── SKILL.md
 │   │   ├── references/
 │   │   │   ├── brand-voice.md
@@ -155,40 +155,43 @@ AITester/
 │       ├── 03-linkedin-card-prompt.md
 │       ├── 04-medium-article.md
 │       └── 05-medium-header-prompt.md
-└── chapter_07_Basics_AI_Agents/
-    └── Test-Plan-Agent-Blast/
-        ├── README.md
-        ├── BLAST.md                  # governing protocol
-        ├── PromptUsed.md
-        ├── task_plan.md              # phases, goals, checklists
-        ├── findings.md               # Jira research, endpoints, defects found
-        ├── progress.md               # append-only run log
-        ├── llm.md                    # constitution: schemas, rules, invariants
-        ├── run.py                    # Flask entry point
-        ├── requirements.txt
-        ├── .env.example
-        ├── app/                      # Flask presentation layer
-        │   ├── __init__.py           # create_app() factory + markdown filter
-        │   ├── routes/               # main + settings blueprints
-        │   ├── templates/            # base, index, settings
-        │   └── static/               # css, js
-        ├── core/                     # deterministic engine + agent
-        │   ├── config_manager.py
-        │   ├── jira_client.py
-        │   ├── normalize.py
-        │   ├── checklist.py
-        │   ├── ollama_client.py
-        │   ├── render.py
-        │   ├── agent.py
-        │   └── navigation.py
-        ├── tools/                    # L3 CLIs (fetch, normalize, gaps, render, run)
-        ├── architecture/             # Layer-1 SOPs
-        ├── prompts/
-        │   └── test_plan_prompt.md
-        ├── templates/
-        │   ├── Test_Plan_Template.md
-        │   └── requirement-checklist.md
-        └── runs/                     # generated plans (.md + .json)
+├── chapter_07_Basics_AI_Agents/
+│   └── Test-Plan-Agent-Blast/
+│       ├── README.md
+│       ├── BLAST.md                  # governing protocol
+│       ├── PromptUsed.md
+│       ├── task_plan.md              # phases, goals, checklists
+│       ├── findings.md               # Jira research, endpoints, defects found
+│       ├── progress.md               # append-only run log
+│       ├── llm.md                    # constitution: schemas, rules, invariants
+│       ├── run.py                    # Flask entry point
+│       ├── requirements.txt
+│       ├── .env.example
+│       ├── app/                      # Flask presentation layer
+│       │   ├── __init__.py           # create_app() factory + markdown filter
+│       │   ├── routes/               # main + settings blueprints
+│       │   ├── templates/            # base, index, settings
+│       │   └── static/               # css, js
+│       ├── core/                     # deterministic engine + agent
+│       │   ├── config_manager.py
+│       │   ├── jira_client.py
+│       │   ├── normalize.py
+│       │   ├── checklist.py
+│       │   ├── ollama_client.py
+│       │   ├── render.py
+│       │   ├── agent.py
+│       │   └── navigation.py
+│       ├── tools/                    # L3 CLIs (fetch, normalize, gaps, render, run)
+│       ├── architecture/             # Layer-1 SOPs
+│       ├── prompts/
+│       │   └── test_plan_prompt.md
+│       ├── templates/
+│       │   ├── Test_Plan_Template.md
+│       │   └── requirement-checklist.md
+│       └── runs/                     # generated plans (.md + .json)
+├── chapter_08_n8n_Agents/
+│   ├── JiraTicket Fetching.json      # chat agent that gets a Jira issue
+│   └── Create JiraTicket.json        # chat agent that creates a Jira subtask
 ```
 
 ---
@@ -350,15 +353,15 @@ Chapter 6 holds the content engine used to publish on LinkedIn and Medium: one r
 
 | File / Folder | Description |
 |---|---|
-| `Skill_LinkedInMedium_PostCreator/SKILL.md` | The `vineet-qa-content` skill. Turns a title, bullets, notes or an image into 3 controversial hooks, a LinkedIn post, an X-style card prompt, a Medium article and a cyberpunk header prompt. |
-| `Skill_LinkedInMedium_PostCreator/references/brand-voice.md` | The fact sheet (the only personal claims allowed), plus voice traits, content pillars, banned words and client-naming rules. |
-| `Skill_LinkedInMedium_PostCreator/references/hooks.md` | Hook types, heat levels and the defensibility test. |
-| `Skill_LinkedInMedium_PostCreator/references/linkedin-post.md` | LinkedIn spec: 150–300 words, → arrows, one offer, PS sign-off, 3–5 hashtags. |
-| `Skill_LinkedInMedium_PostCreator/references/medium-article.md` | Medium spec: 1,000–1,800 words, one table, one code block, one list, pull quote and bio. |
-| `Skill_LinkedInMedium_PostCreator/references/image-prompts.md` | Both image prompt templates, plus the topic-to-metaphor table. |
-| `Skill_LinkedInMedium_PostCreator/references/example-pack.md` | The approved gold-standard pack, used as the bar for new packs. |
-| `Skill_LinkedInMedium_PostCreator/references/ImageReference/Reference.png` | Reference image showing the X-style card format. |
-| `Skill_LinkedInMedium_PostCreator/scripts/lint_content.py` | Brand-rule linter for the post, article and card. |
+| `skill-linkedinmedium-postcreator/SKILL.md` | The `vineet-qa-content` skill. Turns a title, bullets, notes or an image into 3 controversial hooks, a LinkedIn post, an X-style card prompt, a Medium article and a cyberpunk header prompt. |
+| `skill-linkedinmedium-postcreator/references/brand-voice.md` | The fact sheet (the only personal claims allowed), plus voice traits, content pillars, banned words and client-naming rules. |
+| `skill-linkedinmedium-postcreator/references/hooks.md` | Hook types, heat levels and the defensibility test. |
+| `skill-linkedinmedium-postcreator/references/linkedin-post.md` | LinkedIn spec: 150-300 words, arrows, one offer, PS sign-off, 3-5 hashtags. |
+| `skill-linkedinmedium-postcreator/references/medium-article.md` | Medium spec: 1,000-1,800 words, one table, one code block, one list, pull quote and bio. |
+| `skill-linkedinmedium-postcreator/references/image-prompts.md` | Both image prompt templates, plus the topic-to-metaphor table. |
+| `skill-linkedinmedium-postcreator/references/example-pack.md` | The approved gold-standard pack, used as the bar for new packs. |
+| `skill-linkedinmedium-postcreator/references/ImageReference/Reference.png` | Reference image showing the X-style card format. |
+| `skill-linkedinmedium-postcreator/scripts/lint_content.py` | Brand-rule linter for the post, article and card. |
 | `Output/` | Generated content packs. See [`Output/README.md`](./chapter_06_Branding_LinkedIn_Medium/Output/README.md). |
 
 ### Generated Content Packs
@@ -370,7 +373,7 @@ Chapter 6 holds the content engine used to publish on LinkedIn and Medium: one r
 Lint a pack before publishing. The linter reads raw text, so the post is piped in from its copy-paste block:
 
 ```bash
-cd chapter_06_Branding_LinkedIn_Medium/Skill_LinkedInMedium_PostCreator
+cd chapter_06_Branding_LinkedIn_Medium/skill-linkedinmedium-postcreator
 awk '/^```text$/{f=1;next} /^```$/{f=0} f' ../Output/02-linkedin-post.md | python3 scripts/lint_content.py linkedin -
 python3 scripts/lint_content.py medium ../Output/04-medium-article.md
 python3 scripts/lint_content.py card ../Output/03-linkedin-card-prompt.md
@@ -475,6 +478,24 @@ troubleshooting, and the security notes — see [`chapter_07_Basics_AI_Agents/Te
 
 ---
 
+## Chapter 8 - n8n Agents
+
+Chapter 8 contains two importable **n8n** workflow JSON files that demonstrate chat-based Jira agent automation using n8n's LangChain agent nodes, OpenAI chat model integration, short-term memory, and Jira Software Cloud tools.
+
+| Workflow | Status in JSON | What it does |
+|---|---|---|
+| `JiraTicket Fetching.json` | Active | Starts from a public chat trigger, lets the AI agent extract an issue key from the conversation, and calls the Jira tool's `get` operation to fetch that issue. |
+| `Create JiraTicket.json` | Inactive | Starts from a public chat trigger, uses `gpt-5-mini` through the OpenAI chat node, and calls a Jira tool to create a subtask under the parent issue key provided by the user. |
+
+### n8n Workflow Notes
+
+- These files are workflow exports, not Python or Node.js source projects.
+- Import them into n8n, then reconnect your own OpenAI and Jira Software Cloud credentials.
+- The fetching workflow is read-oriented; the create workflow is write-capable and should be tested in a sandbox Jira project first.
+- The workflows use AI-filled Jira fields such as issue key, parent issue key, summary, and description, so user input should be reviewed before running write actions against a real project.
+
+---
+
 ## Codex Agent Skill - Test Plan Creator
 
 The `.agents/skills/testplan-create/` skill turns a Jira ticket into a human-review-ready test plan. It is designed for QA/test planning work such as:
@@ -500,7 +521,6 @@ The skill flow is:
 | `.agents/skills/testplan-create/references/requirement-checklist.md` | Requirement gap-analysis checklist used before drafting the plan. |
 | `.agents/skills/testplan-create/references/template/Test_Plan_Template.md` | Standard test-plan template. |
 | `.agents/skills/testplan-create/assets/vwo_details.md` | Structured VWO overview/reference notes. |
-| `.agents/skills/testplan-create/assets/logo.png` | Skill asset used for VWO-related context or presentation. |
 | `.agents/skills/testplan-create/.env` | Local Jira configuration file. Keep this private and out of commits. |
 
 ### Generated Output
@@ -561,6 +581,7 @@ The generated test plan should always include gaps/questions, assumptions, risks
 - Keep `chapter_07_Basics_AI_Agents/Test-Plan-Agent-Blast/.env` private and do not commit it; the file is gitignored.
 - The Chapter 7 app binds to `127.0.0.1` and has no authentication of its own. Do not expose it publicly.
 - The agent is read-only against Jira: it never transitions, comments on, or edits a ticket.
+- The Chapter 8 n8n fetching workflow reads Jira data, while the create workflow can write subtasks. Use least-privilege Jira credentials and validate AI-filled fields before enabling it outside a sandbox.
 - Review generated files in `.agents/output/` and `chapter_07_Basics_AI_Agents/Test-Plan-Agent-Blast/runs/` before sharing or committing them, because Jira tickets and attachments may contain private product details.
 - Rotate any token that has ever been committed, shared, pasted into an AI chat, or exposed in logs.
 - Generated artifacts and dependency folders should remain uncommitted.
@@ -579,3 +600,4 @@ The generated test plan should always include gaps/questions, assumptions, risks
 8. Run `chapter_05_JobTracker/NextGenJobTracker` to track applications end to end, and read its user guide from inside the app.
 9. Use the Chapter 6 content skill to turn an idea into a LinkedIn and Medium pack, then lint it before publishing.
 10. Read `chapter_07_Basics_AI_Agents/Test-Plan-Agent-Blast/BLAST.md` and `llm.md` to see how an agent project is specified, then run the Chapter 7 Test Plan Agent to draft a plan for a real ticket.
+11. Import the Chapter 8 n8n workflows to compare a visual low-code agent approach with the custom Flask/Codex agent implementations.

@@ -16,6 +16,7 @@
 10. [Prompt Library in This Repository](#10-prompt-library-in-this-repository)
 11. [Jira AI Test Case Generator](#11-jira-ai-test-case-generator)
 12. [Codex Test Plan Skill](#12-codex-test-plan-skill)
+    - [n8n Jira Agent Workflows](#12a-n8n-jira-agent-workflows)
 13. [Playwright Automation Framework](#13-playwright-automation-framework)
 14. [How to Test This AI System](#14-how-to-test-this-ai-system)
 15. [Security and Responsible AI](#15-security-and-responsible-ai)
@@ -38,11 +39,12 @@ The repository contains:
 - Reusable prompts for test cases, API testing, regression, and bug analysis.
 - A Playwright automation framework created from a detailed AI prompt.
 - A Streamlit application that fetches Jira requirements and generates test cases with Ollama or Groq.
-- A Codex skill that converts a Jira ticket into a draft test plan and stops for human review.
+- A Codex skill and a Flask B.L.A.S.T. agent that convert Jira tickets into draft test plans and stop for human review.
+- n8n chat-agent workflow exports for fetching Jira issues and creating Jira subtasks.
 
 ### Interview-ready project pitch
 
-> I built an AI-assisted QA repository that covers the full path from requirements to test artifacts. A user can provide a Jira issue key, the application fetches and normalizes the issue, dynamically loads a test-case template, builds a grounded prompt, and sends it to either a local Ollama model or Groq. I also created reusable prompt patterns, anti-hallucination controls, a human-reviewed test-plan skill, and a Playwright framework that demonstrates how generated test ideas can become executable automation. The main design goals are traceability, modularity, provider independence, security, and human approval.
+> I built an AI-assisted QA repository that covers the full path from requirements to test artifacts. A user can provide a Jira issue key, the application fetches and normalizes the issue, dynamically loads a test-case template, builds a grounded prompt, and sends it to either a local Ollama model or Groq. I also created reusable prompt patterns, anti-hallucination controls, a human-reviewed test-plan skill, a Flask B.L.A.S.T. agent, n8n Jira agent workflows, and a Playwright framework that demonstrates how generated test ideas can become executable automation. The main design goals are traceability, modularity, provider independence, security, and human approval.
 
 ### The central idea
 
@@ -74,6 +76,11 @@ Test plan, test cases, or automation
 | `chapter_01_LLM_Basics/` | Hallucination prevention, evidence, uncertainty, and self-validation. |
 | `chapter_02_Prompt_Engineering/` | RICE-POT, reusable QA prompts, and prompt-to-code automation. |
 | `chapter_03_Local_TestCase_Generator/` | A complete Jira + LLM + Streamlit application. |
+| `chapter_04_JobKit/` | Resume-tailoring skill and job-search prompt assets. |
+| `chapter_05_JobTracker/` | Local-first React job tracker with Kanban, dashboard metrics, import/export, and user guide. |
+| `chapter_06_Branding_LinkedIn_Medium/` | LinkedIn and Medium content-generation skill with linting references. |
+| `chapter_07_Basics_AI_Agents/` | Flask B.L.A.S.T. test-plan agent using Jira, deterministic gap analysis, and local Ollama. |
+| `chapter_08_n8n_Agents/` | n8n chat-agent workflow exports for Jira issue lookup and subtask creation. |
 | `.agents/skills/testplan-create/` | Agent instructions, requirement gap analysis, templates, and a human review gate. |
 | `.agents/output/` | Example test-plan artifacts generated from Jira story `KAN-1`. |
 | `PromptQuickReference.md` | A decision guide for selecting a prompt by QA task. |
@@ -85,7 +92,8 @@ Test plan, test cases, or automation
 3. Use task-specific QA prompt templates.
 4. Understand the Playwright framework produced from a detailed prompt.
 5. Study the Jira AI Test Case Generator architecture.
-6. Study the agent skill and its mandatory human review gate.
+6. Study the Codex skill and B.L.A.S.T. agent with their mandatory human review gates.
+7. Compare the code-first agent approach with the n8n visual workflow approach.
 
 ---
 
@@ -749,6 +757,29 @@ VWO is a digital experience optimization platform used for A/B testing, feature 
 
 ---
 
+## 12A. n8n Jira Agent Workflows
+
+Location: [`chapter_08_n8n_Agents/`](./chapter_08_n8n_Agents/)
+
+Chapter 8 shows a visual low-code version of Jira agent automation using n8n workflow exports.
+
+| Workflow | Main nodes | Purpose |
+|---|---|---|
+| `JiraTicket Fetching.json` | Chat Trigger, AI Agent, OpenAI Chat Model, Simple Memory, Jira Tool | Lets a user ask for a Jira ticket in chat; the agent extracts the issue key and uses the Jira tool to fetch the issue. |
+| `Create JiraTicket.json` | Chat Trigger, AI Agent, OpenAI Chat Model, Simple Memory, Jira Tool | Lets a user describe a subtask; the agent fills summary, description, and parent issue key, then creates a Jira subtask. |
+
+### Why it matters
+
+- It demonstrates a low-code agent pattern beside the code-first Streamlit, Flask, and Codex-skill approaches.
+- It makes tool wiring visible: trigger, model, memory, and Jira action are separate workflow nodes.
+- It is useful for demos and internal workflow prototypes where n8n is already used.
+
+### Safety note
+
+The fetch workflow is read-oriented. The create workflow is write-capable, so it should use least-privilege Jira credentials, a sandbox project during testing, and human review of AI-filled Jira fields before use on real delivery work.
+
+---
+
 ## 13. Playwright Automation Framework
 
 Location: [`chapter_02_Prompt_Engineering/OrangePlaywrightFramework/`](./chapter_02_Prompt_Engineering/OrangePlaywrightFramework/)
@@ -915,6 +946,7 @@ Put malicious instructions inside a Jira description, for example an instruction
 | Prompt injection | Jira text asks the model to ignore rules. | Separate trusted instructions from untrusted content and validate output. |
 | Data leakage | Private Jira text is sent to an external model. | Consent, data classification, local model, minimization, provider policy. |
 | Excessive permissions | Agent can access more Jira data than needed. | Least-privilege service account and scoped tools. |
+| Unsafe write action | n8n create workflow writes an incorrect Jira subtask. | Sandbox first, least-privilege credentials, and human review of AI-filled fields. |
 | Hallucination | Model invents an acceptance criterion. | Grounding, traceability, automated checks, human review. |
 | Bias | Generated coverage ignores some users or accessibility needs. | Diverse test set, bias review, explicit accessibility criteria. |
 | Unsafe automation | Generated code changes systems unexpectedly. | Sandbox, review, restricted credentials, approval gates. |
@@ -929,6 +961,8 @@ Put malicious instructions inside a Jira description, for example an instruction
 - Set request timeouts and bounded retries.
 - Avoid returning raw provider errors to users.
 - Redact sensitive fields from logs and traces.
+- Treat n8n exported credentials as environment-specific; reconnect your own Jira/OpenAI credentials after import and never publish real credential IDs as secrets.
+- Keep write-capable workflows disabled until their Jira project, issue type, parent issue handling, and approval rules are verified.
 - Define retention and deletion rules for prompts and responses.
 - Record model, prompt, source, and review versions for auditability.
 
@@ -981,6 +1015,10 @@ The current use case fetches one known Jira ticket directly, so deterministic AP
 ### Why not fine-tune first?
 
 Prompting and templates are cheaper and easier to change. Fine-tuning should follow only after enough reviewed examples show a stable behavior gap that prompting or RAG cannot solve.
+
+### Why add n8n workflows?
+
+n8n shows the same agent idea as a visual workflow: chat trigger, model, memory, and Jira tool. The trade-off is fast workflow assembly versus less custom control than a dedicated app, especially for validation, tests, versioning, and approval gates.
 
 ---
 
@@ -1066,6 +1104,10 @@ An agent can choose and use tools across multiple steps, maintain state, inspect
 
 AI cannot confirm business intent or accept risk. The draft surfaces gaps, while a human owner approves assumptions, scope, and priorities.
 
+### 20A. How are the n8n workflows different from the Flask agent?
+
+The Flask agent is a custom coded pipeline with deterministic normalization, gap analysis, artifact rendering, and a review gate. The n8n workflows are visual chat agents that wire together model, memory, and Jira tool nodes for quick issue lookup or subtask creation.
+
 ### 21. How does the Playwright framework relate to AI?
 
 It was specified through a structured RICE-POT prompt and demonstrates that generated code still needs architectural review, execution, assertions, and maintenance.
@@ -1132,6 +1174,17 @@ npm test -- --debug
 npm run test:report
 ```
 
+### Import n8n Jira agent workflows
+
+Import these files from the n8n UI, then reconnect your own OpenAI and Jira credentials:
+
+```text
+chapter_08_n8n_Agents/JiraTicket Fetching.json
+chapter_08_n8n_Agents/Create JiraTicket.json
+```
+
+Keep the create workflow disabled until it has been tested against a sandbox Jira project.
+
 ### Configuration names to remember
 
 Jira/LLM application:
@@ -1155,6 +1208,15 @@ Playwright framework:
 - `INVALID_PASSWORD`
 - `PASS_RATE_THRESHOLD`
 
+n8n workflows:
+
+- OpenAI chat model credentials
+- Jira Software Cloud credentials
+- Jira project ID
+- Jira issue type ID
+- Jira assignee account ID
+- Parent issue key
+
 Never place real secret values in notes, source control, examples, screenshots, or logs.
 
 ---
@@ -1176,6 +1238,7 @@ Never place real secret values in notes, source control, examples, screenshots, 
 | LLM | Large Language Model. |
 | MCP | A protocol for exposing tools and context to AI clients. |
 | Model drift | Quality change caused by changing data, behavior, or environment. |
+| n8n | A low-code workflow automation tool used here for chat-based Jira agent workflows. |
 | PII | Personally identifiable information. |
 | POM | Page Object Model for UI test automation. |
 | Prompt injection | Untrusted text attempting to override trusted instructions. |
@@ -1213,12 +1276,14 @@ Never place real secret values in notes, source control, examples, screenshots, 
 - The template is loaded dynamically.
 - The provider layer selects Ollama or Groq.
 - Ollama is local-first; Groq is the optional cloud provider/fallback.
+- n8n provides importable visual workflows for Jira issue lookup and Jira subtask creation.
 
 ### Quality and safety
 
 - Evaluate correctness, faithfulness, coverage, format, consistency, latency, cost, and safety.
 - Treat Jira text as untrusted input because of prompt injection.
 - Keep secrets out of Git, output, logs, and prompts.
+- Treat write-capable agent workflows as risky until scoped, reviewed, and tested in a sandbox.
 - Keep humans responsible for scope, assumptions, and approval.
 
 ### QA connection

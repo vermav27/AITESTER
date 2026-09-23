@@ -1,0 +1,185 @@
+{
+  "name": "JiraTicket Fetching",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nMy name is Vineet. How can I assist you today?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -336,
+        16
+      ],
+      "id": "e31f7e02-bd0a-43b1-b23b-a853541f2edf",
+      "name": "When chat message received",
+      "webhookId": "97425b16-7aa4-4694-8b67-66f80dab59da"
+    },
+    {
+      "parameters": {
+        "content": "Trigger",
+        "height": 352,
+        "width": 224,
+        "color": "#DAC808"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -400,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "f45f6fff-28e1-45ac-9cce-60e0eb60ca44",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Action",
+        "height": 352,
+        "width": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -144,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "9fd407a9-2eeb-42dc-951f-948f13204f9d",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -112,
+        48
+      ],
+      "id": "477e8114-99a8-4cb5-adb7-6637a6ff346b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini",
+          "cachedResultName": "gpt-5-mini",
+          "cachedResultUrl": ""
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -144,
+        304
+      ],
+      "id": "19cada6a-e371-426c-8d8c-5873845ec5bb",
+      "name": "Brain",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -48,
+        400
+      ],
+      "id": "7a82a3ed-fd19-488e-a0fd-cf2442935045",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "issueKey": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Issue_Key', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.jiraTool",
+      "typeVersion": 1,
+      "position": [
+        48,
+        256
+      ],
+      "id": "8b911774-ebe9-40a8-b237-8943f1724f5e",
+      "name": "Get an issue in Jira Software",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "LY5FlBEt4dxuZOsR",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brain": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get an issue in Jira Software": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "585d59e0-d6bc-4a9e-aa63-139f6a650631",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1e4250e3b241190f510b086fc4937f898d31543c291d04fabadd87a2d5a12cdc"
+  },
+  "nodeGroups": [],
+  "id": "fYL0k3Gj27eMnjaM",
+  "tags": []
+}

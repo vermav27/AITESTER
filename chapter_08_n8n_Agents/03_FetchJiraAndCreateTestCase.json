@@ -1,0 +1,170 @@
+{
+  "name": "FetchJiraAndCreateTestCase",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -400,
+        -32
+      ],
+      "id": "b4897c6c-5396-4b98-a726-940d3d728bf8",
+      "name": "When chat message received",
+      "webhookId": "cd7f363d-30df-4a01-b252-d61aaba8f2dd"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -144,
+        -144
+      ],
+      "id": "932e158c-8401-4c9e-b7ab-91ad2204cf0a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "gemma3:4b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        192
+      ],
+      "id": "b7b859af-5781-426f-b0f2-92f32268e0a0",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "hgT6kb7tp93sIyl8",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -80,
+        208
+      ],
+      "id": "97b9cbca-cf8b-42e4-9683-00b33b2d1e85",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "issueKey": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Issue_Key', ``, 'string') }}",
+        "simplifyOutput": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Simplify', ``, 'boolean') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.jiraTool",
+      "typeVersion": 1,
+      "position": [
+        112,
+        208
+      ],
+      "id": "0152ada8-96ec-4182-af12-b247cf361235",
+      "name": "Get an issue in Jira Software",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "QpOjphsFiuQDZBGb",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-safeguard-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        144
+      ],
+      "id": "577b1d2b-a369-46f9-9103-c55ec77190b1",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "lfwrSd6GCTJYtfaD",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get an issue in Jira Software": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "0df215f4-3dcd-4ccc-908f-ce48839615ed",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2b2d2b307c967bc13b784e191ca6360daa075a2125a3e869dd4bacf2129b291a"
+  },
+  "nodeGroups": [],
+  "id": "orR89VSAcxJjeB2M",
+  "tags": []
+}

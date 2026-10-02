@@ -1,0 +1,379 @@
+{
+  "name": "04_SocialMediaPostGenerator",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Trigger",
+        "height": 384,
+        "width": 256
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -768,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "739c8adf-199d-49a7-a7ff-6b95c1e96dec",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Actions",
+        "height": 832,
+        "width": 1184,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -496,
+        -256
+      ],
+      "typeVersion": 1,
+      "id": "47dd6927-7f03-4fe1-bed7-dc62180a0ed9",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Results\n",
+        "height": 544,
+        "width": 272,
+        "color": "#BDB9F9"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        704,
+        -224
+      ],
+      "typeVersion": 1,
+      "id": "a0484e1c-f121-40f4-9628-5ec5b967b931",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 3,
+              "triggerAtHour": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -688,
+        16
+      ],
+      "id": "b02acf04-c9d7-46db-b358-3488efde6410",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Generate ONE fresh, specific content topic for my Software Testing / QA / AI-in-QA personal brand.\n\nThe topic should be practical, technically credible, and useful for:\n- QA Engineers\n- SDETs\n- Automation Engineers\n- Software Engineers\n- QA Leads\n\nPrioritize real engineering problems involving:\n- Software Testing\n- Test Automation\n- Playwright\n- Quality Engineering\n- AI-assisted QA\n- AI agents for QA\n- Testing AI systems\n- CI/CD quality\n- Bug triage\n- Test case generation\n- AI-generated automation code\n- Prompt engineering for QA\n\nAvoid generic topics.\n\nDo not write the full post.\n\nFollow the System Message rules and return the output using the required structured schema exactly.\n\nExecution date:\n{{ $now }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a senior content strategist specializing in Software Testing, Quality Engineering, Test Automation, and practical AI usage in QA.\n\nYour task is to generate ONE fresh, specific, technically credible content topic that can be used for a LinkedIn post or Instagram knowledge post.\n\nThe audience consists primarily of:\n- QA Engineers\n- SDETs\n- Automation Engineers\n- Software Engineers\n- QA Leads\n- Engineering Managers interested in quality\n- Engineers experimenting with AI-assisted testing\n\nThe topic must sit within Software Testing, Quality Engineering, Test Automation, or AI applied practically to QA.\n\nPREFERRED CONTENT AREAS\n\nYou may generate topics around areas such as:\n\n- AI-assisted software testing\n- AI-assisted test case generation\n- AI-assisted exploratory testing\n- AI for bug triage\n- AI for requirement analysis\n- AI for test planning\n- AI for test strategy\n- AI-generated tests and their risks\n- LLM hallucination in testing workflows\n- Prompt engineering for QA\n- AI agents for QA workflows\n- Agentic testing\n- Human validation of AI-generated tests\n- AI evaluation for testing workflows\n- Playwright + AI\n- Test automation architecture\n- Playwright best practices\n- Locator strategy\n- Flaky tests\n- CI/CD quality gates\n- Regression testing\n- Risk-based testing\n- API testing\n- Test data management\n- Shift-left testing\n- Quality engineering\n- Testing AI-powered applications\n- Testing LLM-based applications\n- RAG testing\n- AI agent testing\n- MCP-based QA workflows\n- n8n automation for QA\n- Jira + AI automation\n- AI-assisted bug analysis\n- Structured prompting for engineering\n- AI-generated code validation\n- Software quality in AI-assisted development\n\nTOPIC QUALITY REQUIREMENTS\n\nThe topic must:\n\n1. Be specific enough to become a useful technical post.\n2. Teach the reader something they could apply in their work.\n3. Prefer a real engineering problem, decision, mistake, experiment, trade-off, or workflow.\n4. Avoid generic educational topics.\n5. Include a clear point of view or tension.\n6. Be understandable without requiring unnecessary AI jargon.\n7. Be suitable for a professional personal brand.\n8. Prefer practitioner-level insights over beginner definitions.\n9. Connect AI to real software engineering or QA work whenever AI is involved.\n10. Be narrow enough that one LinkedIn or Instagram post can cover it properly.\n\nGOOD TOPIC STYLE EXAMPLES\n\nGood:\n\"Why AI-generated Playwright tests can pass and still test nothing\"\n\nGood:\n\"Using AI to review acceptance criteria before writing test cases\"\n\nGood:\n\"How I would validate an AI-generated regression suite before trusting it\"\n\nGood:\n\"Why structured JSON output matters when an AI agent triages Jira bugs\"\n\nGood:\n\"Three failure modes to test before putting an LLM feature into production\"\n\nBad:\n\"How AI is changing software testing\"\n\nBad:\n\"Top benefits of AI in QA\"\n\nBad:\n\"Future of software testing\"\n\nBad:\n\"Why automation is important\"\n\nBad:\n\"10 AI tools every tester should know\"\n\nGUARDRAILS\n\nFollow these rules strictly:\n\n- Do NOT invent personal experiences, company names, project results, metrics, statistics, quotes, or case studies.\n- Do NOT claim that something happened to the author unless that information was explicitly provided.\n- Do NOT generate fake numbers for hooks.\n- Do NOT fabricate industry research.\n- Do NOT make unsupported claims such as:\n  \"AI will replace QA.\"\n  \"Manual testing is dead.\"\n  \"AI removes the need for testers.\"\n- Avoid sensational or clickbait framing.\n- Avoid attacking developers, manual testers, QA engineers, managers, or other roles.\n- Avoid vague phrases such as:\n  \"AI is revolutionizing testing.\"\n  \"AI is a game changer.\"\n  \"The future is AI.\"\n- Do not create a topic that requires facts you do not have.\n- Do not create multiple unrelated ideas in the same topic.\n- Do not write the full LinkedIn post.\n- Do not write the full Instagram caption.\n- Generate only ONE topic per execution.\n- Prefer practical engineering decisions over motivational content.\n- Prefer concrete workflows, failure modes, experiments, debugging lessons, validation strategies, and engineering trade-offs.\n- If AI generates something, always consider how a human engineer would validate or test the result.\n- Never assume AI output is automatically correct.\n\nDUPLICATE PREVENTION\n\nIf previously generated topics are supplied in the input:\n\n- Do not repeat the same topic.\n- Do not simply reword an existing topic.\n- Avoid using the same central argument.\n- Choose a materially different engineering problem or perspective.\n\nOUTPUT FORMAT\n\nReturn ONLY valid JSON.\n\nDo not include Markdown.\nDo not include ```json.\nDo not include explanations before or after the JSON.\n\nUse exactly this schema:\n\n{\n  \"topic\": \"\",\n  \"content_pillar\": \"\",\n  \"angle\": \"\",\n  \"target_reader\": \"\",\n  \"engineering_problem\": \"\",\n  \"key_takeaway\": \"\",\n  \"hook_direction\": \"\",\n  \"suggested_platform\": \"\"\n}\n\nFIELD RULES\n\ntopic:\nA clear post title/topic. Maximum 18 words.\n\ncontent_pillar:\nChoose exactly one:\n\"AI in QA\"\n\"Test Automation\"\n\"Quality Engineering\"\n\"Playwright\"\n\"AI Agents for QA\"\n\"Testing AI Systems\"\n\"CI/CD & Quality\"\n\"QA Career & Engineering\"\n\nangle:\nOne or two sentences describing the specific perspective of the post.\n\ntarget_reader:\nOne concise description of who would benefit most.\n\nengineering_problem:\nThe actual technical or process problem being addressed.\n\nkey_takeaway:\nExactly one lesson the reader should leave with.\n\nhook_direction:\nA short idea for how the eventual post could open.\nDo not invent statistics or personal experiences.\n\nsuggested_platform:\nChoose:\n\"LinkedIn\"\n\"Instagram\"\n\"Both\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -368,
+        16
+      ],
+      "id": "371f3f36-eb35-4340-9af5-69c5a4b1860e",
+      "name": "Content Topic Generator"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"topic\": {\n      \"type\": \"string\"\n    },\n    \"content_pillar\": {\n      \"type\": \"string\"\n    },\n    \"angle\": {\n      \"type\": \"string\"\n    },\n    \"target_reader\": {\n      \"type\": \"string\"\n    },\n    \"engineering_problem\": {\n      \"type\": \"string\"\n    },\n    \"key_takeaway\": {\n      \"type\": \"string\"\n    },\n    \"hook_direction\": {\n      \"type\": \"string\"\n    },\n    \"suggested_platform\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"topic\",\n    \"content_pillar\",\n    \"angle\",\n    \"target_reader\",\n    \"engineering_problem\",\n    \"key_takeaway\",\n    \"hook_direction\",\n    \"suggested_platform\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -160,
+        240
+      ],
+      "id": "d836601e-ece5-4484-9538-ef77bc372bd5",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -448,
+        272
+      ],
+      "id": "ba4f0d70-0be5-4f06-b42a-da1fd22e7d74",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini",
+          "cachedResultName": "gpt-5-mini",
+          "cachedResultUrl": ""
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        48,
+        304
+      ],
+      "id": "31e3687a-3def-4e38-b894-6cea42fca5d4",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"post_title\": {\n      \"type\": \"string\"\n    },\n    \"post_body\": {\n      \"type\": \"string\"\n    },\n    \"hashtags\": {\n      \"type\": \"string\"\n    },\n    \"image_prompt\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"post_title\",\n    \"post_body\",\n    \"hashtags\",\n    \"image_prompt\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        272,
+        304
+      ],
+      "id": "8d06a324-e0cf-4ebe-b002-fdeec4423be5",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write me a linkedIn Post. \n\nTopic :  {{ $json.output.topic }}\nAngle : {{ $json.output.angle }}\nAudience : {{ $json.output.target_reader }}\n\nRules: no contractions, no emojis, plain declarative sentences, short paragraphs, one clear takeaway, 150–250 words. Also produce a post title and a one-sentence image prompt describing a clean technical illustration for this post.\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You write a linkedIn post for the software testing audience. Return only the fields required by the schema."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        48,
+        16
+      ],
+      "id": "37a78a86-87bb-495b-b1bb-0346d9dd2358",
+      "name": "Content creator ( LinkedIn Post )"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-image-2",
+          "mode": "list",
+          "cachedResultName": "GPT-IMAGE-2"
+        },
+        "prompt": "=Create  {{ $json.output.image_prompt }} in context of {{ $json.output.post_body }} with less text content in it but should be understandable to user in 4K resolution. In the generated image there should be a watermark at the right bottom \"Author : Vineet Verma\"",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        16
+      ],
+      "id": "7a9cdc2f-ec30-4466-bdb9-9de579bc68a0",
+      "name": "Generate an image",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        560,
+        208
+      ],
+      "id": "fab4c9a4-abc4-4d79-8b54-6691a3529bd0",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "person": "HzZB5llAwV",
+        "text": "={{ $json.output.post_title }}\n\n{{ $json.output.post_body }}\n\n{{ $json.output.hashtags }}\n\n",
+        "shareMediaCategory": "IMAGE",
+        "additionalFields": {
+          "title": "={{ $json.output.post_title }}",
+          "visibility": "PUBLIC"
+        }
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        768,
+        16
+      ],
+      "id": "be58c27e-052a-4ce0-893b-31b8438f8284",
+      "name": "Create a post",
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "cKimm2L5yzFgtIch",
+          "name": "LinkedIn account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Content Topic Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Content Topic Generator",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Content Topic Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Topic Generator": {
+      "main": [
+        [
+          {
+            "node": "Content creator ( LinkedIn Post )",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Content creator ( LinkedIn Post )",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Content creator ( LinkedIn Post )",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content creator ( LinkedIn Post )": {
+      "main": [
+        [
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Generate an image": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Create a post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "528a9902-57b1-4b17-af7d-4129aeb018db",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1e4250e3b241190f510b086fc4937f898d31543c291d04fabadd87a2d5a12cdc"
+  },
+  "nodeGroups": [],
+  "id": "WsfqHNrQPGIbTeTv",
+  "tags": []
+}

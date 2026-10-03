@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Upload a screenshot and create a structured Jira bug." />
+    <title>Screenshot Bug Reporter</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="workspace" aria-labelledby="page-title">
+        <div class="intro">
+          <p class="eyebrow">QA Evidence Intake</p>
+          <h1 id="page-title">Screenshot Bug Reporter</h1>
+          <p class="lede">
+            Capture visual defects quickly with evidence, environment context and notes in one
+            focused submission.
+          </p>
+        </div>
+
+        <section class="panel" aria-label="Bug report submission">
+          <form class="report-form" id="bug-report-form">
+            <div class="upload-panel" id="drop-zone">
+              <input
+                id="screenshot"
+                name="field-0"
+                type="file"
+                accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp"
+                required
+              />
+              <label for="screenshot" class="upload-target">
+                <span class="upload-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img">
+                    <path d="M4 16.5V18a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1.5" />
+                    <path d="M16 8l-4-4-4 4" />
+                    <path d="M12 4v12" />
+                  </svg>
+                </span>
+                <span class="upload-title">Drop screenshot here or browse</span>
+                <span class="upload-copy">PNG, JPG or WebP up to 18 MB</span>
+              </label>
+              <div class="preview is-empty" id="preview">
+                <div class="preview-placeholder">Preview</div>
+                <img alt="Selected screenshot preview" id="preview-image" />
+              </div>
+            </div>
+
+            <div class="field-grid">
+              <label class="field">
+                <span>What were you doing?</span>
+                <textarea
+                  name="field-1"
+                  rows="4"
+                  placeholder="Example: Searching for a product, opening checkout, clicking Save"
+                ></textarea>
+              </label>
+
+              <label class="field">
+                <span>Environment / Page URL</span>
+                <input name="field-2" type="text" placeholder="Browser, OS, app version or page URL" />
+              </label>
+
+              <label class="field">
+                <span>Error Logs</span>
+                <textarea
+                  name="field-3"
+                  rows="5"
+                  placeholder="Paste console, network or server logs when available"
+                ></textarea>
+              </label>
+            </div>
+
+            <div class="form-footer">
+              <div class="status" id="status" role="status" aria-live="polite">Ready for evidence.</div>
+              <button type="submit" class="submit-button" id="submit-button">
+                <span class="button-label">Create Bug</span>
+                <span class="button-spinner" aria-hidden="true"></span>
+              </button>
+            </div>
+          </form>
+
+          <section class="result-panel" id="result-panel" hidden aria-live="polite">
+            <p class="result-label">Ticket Created</p>
+            <h2 id="ticket-key">KAN-0</h2>
+            <p class="result-copy">
+              The bug has been created and is ready for review.
+            </p>
+            <div class="ticket-url-row">
+              <input id="ticket-url" type="text" readonly aria-label="Created ticket URL" />
+              <button type="button" class="secondary-button" id="copy-url-button">Copy URL</button>
+            </div>
+            <div class="result-actions">
+              <a class="submit-button link-button" id="open-ticket-link" target="_blank" rel="noopener noreferrer">
+                Open Ticket
+              </a>
+              <button type="button" class="secondary-button" id="log-another-button">Log another bug</button>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script src="/src/app.js" defer></script>
+  </body>
+</html>

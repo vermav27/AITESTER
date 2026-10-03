@@ -1,0 +1,444 @@
+{
+  "name": "05_ScreenshotToBugReporter",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Trigger\nTester uploads a screenshot (plus optional logs) through the n8n form.",
+        "height": 400,
+        "width": 480,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "71fd2ebf-a851-477f-8e9e-30e6bc91936a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## AI Analysis\nVision model reads the screenshot and fills the bug report schema.\n\n**Model:** `qwen/qwen3.8-27b:free` (OpenRouter).\nIf it is rate limited, the fallback `google/gemini-2.5-flash-lite` (~$0.0006 per bug) is used.",
+        "height": 656,
+        "width": 560,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        512,
+        0
+      ],
+      "id": "db439954-5877-4aa6-9e26-92efac77d0b8",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Jira\nBuild the description, create the Bug in **AwesomeQA**, then attach the screenshot.\n\nIssue type is preset to **Bug** (ID `10043` in AwesomeQA). Re-pick it if you use another project.",
+        "height": 400,
+        "width": 1040
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1104,
+        0
+      ],
+      "id": "14f29649-4ac0-4210-a4e9-265027b2ab01",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Result\nShows the new ticket key and link to the tester.",
+        "height": 400,
+        "width": 272,
+        "color": "#BDB9F9"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2176,
+        0
+      ],
+      "id": "d38f6b94-ba2b-46b3-bb59-c6fb12609136",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "formTitle": "Screenshot to Bug Reporter",
+        "formDescription": "Upload a screenshot of the bug. AI drafts the bug report and files it in Jira (AwesomeQA) with the screenshot attached.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Screenshot",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".png, .jpg, .jpeg, .webp",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "What were you doing?",
+              "fieldType": "textarea",
+              "placeholder": "e.g. Logging in with a valid user and clicking Submit"
+            },
+            {
+              "fieldLabel": "Environment / Page URL",
+              "placeholder": "e.g. Chrome 140, Windows 11, https://staging.example.com/login"
+            },
+            {
+              "fieldLabel": "Error Logs",
+              "fieldType": "textarea",
+              "placeholder": "Paste console or server logs (optional)"
+            }
+          ]
+        },
+        "options": {
+          "buttonLabel": "Create Bug"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        80,
+        160
+      ],
+      "id": "537b9583-846c-49f6-9603-2e20beed7ab6",
+      "name": "Upload Screenshot",
+      "webhookId": "9fa27c88-49fe-49e0-9dff-744ff094fa18"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Collect the form answers and give the screenshot a fixed name (\"screenshot\")\nconst item = $input.first();\nconst binaryKeys = Object.keys(item.binary || {});\n\nif (binaryKeys.length === 0) {\n  throw new Error('No screenshot was uploaded.');\n}\n\nconst screenshot = item.binary[binaryKeys[0]];\nif (!(screenshot.mimeType || '').startsWith('image/')) {\n  throw new Error(`The uploaded file is not an image (${screenshot.mimeType}).`);\n}\n\nconst form = item.json;\nconst clean = (value) => (value || '').toString().trim();\n\nreturn [{\n  json: {\n    user_notes: clean(form['What were you doing?']),\n    environment: clean(form['Environment / Page URL']),\n    error_logs: clean(form['Error Logs']),\n    submitted_at: form.submittedAt || new Date().toISOString(),\n  },\n  binary: { screenshot },\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        160
+      ],
+      "id": "729ec789-34bc-4153-a01d-7526ae431fca",
+      "name": "Normalize Input"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyse the attached screenshot and draft a Jira bug report.\n\nTester notes (what they were doing):\n{{ $json.user_notes || 'Not provided' }}\n\nEnvironment / page URL given by the tester:\n{{ $json.environment || 'Not provided' }}\n\nError logs:\n{{ $json.error_logs || 'No logs provided' }}",
+        "hasOutputParser": true,
+        "needsFallback": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are a senior QA engineer who writes clear, complete, reproducible Jira bug reports.\n\nYou will receive:\n1. A screenshot of a software UI that shows a bug.\n2. Optional error logs, tester notes and environment details.\n\nYour job:\n- Look carefully at the screenshot. Read every visible error message, label, button, field value, URL, browser and OS hint.\n- Work out what the tester was most likely doing and what went wrong.\n- Write steps to reproduce that a developer can follow without seeing the screenshot. Start from opening the page. Each step is one short action.\n- Expected result = what the app should have done. Actual result = what the screenshot shows.\n- visual_observations = concrete visual details (layout breaks, overlapping or cut-off text, wrong colours, missing images, error banners, exact on-screen error text).\n- If the logs contain a stack trace or error, summarise the root error in error_summary. If there are no logs, use an empty string.\n- For environment fields you cannot see or infer, use \"Unknown\". Never invent version numbers.\n- severity: Critical (crash, data loss, security, blocks a core flow), Major (feature broken, has a workaround), Minor (cosmetic or small functional issue), Trivial (typo, tiny alignment).\n- priority: Highest, High, Medium, Low or Lowest, matching the severity and user impact.\n- summary: one line, under 120 characters, in the form \"[Area] What is wrong when doing what\".\n- labels: 1 to 3 short lowercase words with no spaces (for example: login, ui, checkout).\n\nReturn ONLY the JSON object required by the output format. No markdown, no extra text."
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary",
+              "binaryImageDataKey": "screenshot",
+              "imageDetail": "high"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        624,
+        160
+      ],
+      "id": "41e91b9a-52a3-476a-b492-f0e127ab8309",
+      "name": "Analyze Screenshot",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3.8-27b:free",
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        560,
+        416
+      ],
+      "id": "cb2d19da-1353-4104-8205-4808eb091eca",
+      "name": "OpenRouter Vision Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "DzcL4L6ExCfQeBvp",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-flash-lite",
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        736,
+        416
+      ],
+      "id": "fce0d752-c4c0-4062-b1f4-505855b531b9",
+      "name": "Fallback Vision Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "DzcL4L6ExCfQeBvp",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"summary\": {\n      \"type\": \"string\"\n    },\n    \"description\": {\n      \"type\": \"string\"\n    },\n    \"steps_to_reproduce\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"expected_result\": {\n      \"type\": \"string\"\n    },\n    \"actual_result\": {\n      \"type\": \"string\"\n    },\n    \"severity\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"Critical\",\n        \"Major\",\n        \"Minor\",\n        \"Trivial\"\n      ]\n    },\n    \"priority\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"Highest\",\n        \"High\",\n        \"Medium\",\n        \"Low\",\n        \"Lowest\"\n      ]\n    },\n    \"environment\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"browser\": {\n          \"type\": \"string\"\n        },\n        \"os\": {\n          \"type\": \"string\"\n        },\n        \"url\": {\n          \"type\": \"string\"\n        },\n        \"app_version\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"visual_observations\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"error_summary\": {\n      \"type\": \"string\"\n    },\n    \"labels\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    }\n  },\n  \"required\": [\n    \"summary\",\n    \"description\",\n    \"steps_to_reproduce\",\n    \"expected_result\",\n    \"actual_result\",\n    \"severity\",\n    \"priority\",\n    \"visual_observations\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        912,
+        416
+      ],
+      "id": "9c10ad81-cc4c-4304-90ec-058c90ea7a2b",
+      "name": "Bug Report Parser"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Turn the AI output into Jira wiki markup and the fields the Jira node needs\nconst bug = $input.first().json.output;\nconst input = $('Normalize Input').first().json;\n\nconst list = (items, bullet) =>\n  (items || []).filter(Boolean).map((text) => `${bullet} ${text}`).join('\\n');\n\nconst env = bug.environment || {};\nconst envLines = [\n  ['Browser', env.browser],\n  ['OS', env.os],\n  ['URL', env.url],\n  ['App version', env.app_version],\n]\n  .filter(([, value]) => value && value !== 'Unknown')\n  .map(([name, value]) => `* *${name}:* ${value}`)\n  .join('\\n');\n\n// Keep very long logs from hitting Jira's description size limit\nconst MAX_LOG_CHARS = 10000;\nlet logs = input.error_logs;\nif (logs.length > MAX_LOG_CHARS) {\n  logs = logs.slice(0, MAX_LOG_CHARS) + '\\n... (truncated)';\n}\n\nconst sections = [\n  'h3. Description', bug.description,\n  'h3. Steps to Reproduce', list(bug.steps_to_reproduce, '#'),\n  'h3. Expected Result', bug.expected_result,\n  'h3. Actual Result', bug.actual_result,\n  'h3. Visual Observations', list(bug.visual_observations, '*') || 'None noted.',\n  'h3. Environment', envLines || (input.environment || 'Not visible in the screenshot.'),\n  'h3. Severity', bug.severity,\n];\nif (bug.error_summary) sections.push('h3. Error Summary', bug.error_summary);\nif (logs) sections.push('h3. Error Logs', '{code}\\n' + logs + '\\n{code}');\nif (input.user_notes) sections.push('h3. Tester Notes', input.user_notes);\nsections.push(\n  '----',\n  '_Drafted by the n8n Screenshot-to-Bug-Reporter from an uploaded screenshot. Please review before triage. Screenshot attached._',\n);\n\n// Default Jira Cloud priority IDs\nconst PRIORITY_IDS = { Highest: '1', High: '2', Medium: '3', Low: '4', Lowest: '5' };\n\n// Jira labels cannot contain spaces\nconst labels = ['ai-generated', 'screenshot-bug', ...(bug.labels || [])]\n  .map((label) => String(label).toLowerCase().trim().replace(/\\s+/g, '-'))\n  .filter(Boolean);\n\nreturn [{\n  json: {\n    summary: (bug.summary || 'Bug reported from screenshot').slice(0, 250),\n    description: sections.join('\\n\\n'),\n    priority_id: PRIORITY_IDS[bug.priority] || '3',\n    labels: [...new Set(labels)],\n  },\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1184,
+        160
+      ],
+      "id": "2ef2cbf5-91df-45c5-bfa9-58faa0bea459",
+      "name": "Build Jira Description"
+    },
+    {
+      "parameters": {
+        "project": {
+          "__rl": true,
+          "value": "10001",
+          "mode": "list",
+          "cachedResultName": "AwesomeQA"
+        },
+        "issueType": {
+          "__rl": true,
+          "value": "10043",
+          "mode": "list",
+          "cachedResultName": "Bug"
+        },
+        "summary": "={{ $json.summary }}",
+        "additionalFields": {
+          "description": "={{ $json.description }}",
+          "labels": "={{ $json.labels }}",
+          "priority": {
+            "__rl": true,
+            "value": "={{ $json.priority_id }}",
+            "mode": "id"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.jira",
+      "typeVersion": 1,
+      "position": [
+        1424,
+        160
+      ],
+      "id": "38e8e7ee-9a0e-4d20-baef-84682ac06c94",
+      "name": "Create Bug",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "LY5FlBEt4dxuZOsR",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// The Jira create output has no binary data, so bring the screenshot back\nconst created = $input.first().json;\nconst upload = $('Normalize Input').first();\nconst baseUrl = created.self.split('/rest/')[0];\n\nreturn [{\n  json: {\n    key: created.key,\n    url: `${baseUrl}/browse/${created.key}`,\n  },\n  binary: { screenshot: upload.binary.screenshot },\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1664,
+        160
+      ],
+      "id": "3a026dc2-3827-4e0d-98da-e64ef5853c45",
+      "name": "Prepare Attachment"
+    },
+    {
+      "parameters": {
+        "resource": "issueAttachment",
+        "issueKey": "={{ $json.key }}",
+        "binaryPropertyName": "screenshot"
+      },
+      "type": "n8n-nodes-base.jira",
+      "typeVersion": 1,
+      "position": [
+        1904,
+        160
+      ],
+      "id": "487af15c-2e6f-4941-9a7c-b7cf65f3964a",
+      "name": "Attach Screenshot",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "LY5FlBEt4dxuZOsR",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "completionTitle": "=Bug {{ $('Prepare Attachment').first().json.key }} created",
+        "completionMessage": "=The bug report was drafted from your screenshot and filed in Jira.\n\nOpen it here: {{ $('Prepare Attachment').first().json.url }}\n\nPlease review the steps before triage.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        2256,
+        160
+      ],
+      "id": "b7abfd0c-7366-4a67-92fe-646150f25bb2",
+      "name": "Show Result",
+      "webhookId": "d08c459c-c79f-49ab-a2e0-ead098f5314c"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Upload Screenshot": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "Analyze Screenshot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Screenshot": {
+      "main": [
+        [
+          {
+            "node": "Build Jira Description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Jira Description": {
+      "main": [
+        [
+          {
+            "node": "Create Bug",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Bug": {
+      "main": [
+        [
+          {
+            "node": "Prepare Attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Attachment": {
+      "main": [
+        [
+          {
+            "node": "Attach Screenshot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Attach Screenshot": {
+      "main": [
+        [
+          {
+            "node": "Show Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Vision Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Analyze Screenshot",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fallback Vision Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Analyze Screenshot",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Bug Report Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Analyze Screenshot",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c10810ac-fc8c-4e75-82a3-6317f9bc1eaa",
+  "meta": {
+    "instanceId": "1e4250e3b241190f510b086fc4937f898d31543c291d04fabadd87a2d5a12cdc"
+  },
+  "nodeGroups": [],
+  "id": "macmDCsbW5ngb8aa",
+  "tags": []
+}
